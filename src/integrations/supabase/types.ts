@@ -464,6 +464,7 @@ export type Database = {
     }
     Functions: {
       a_acces_complet: { Args: { _user_id: string }; Returns: boolean }
+      activer_code_magnificat: { Args: { _code: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -471,6 +472,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      reclamer_admin_initial: { Args: never; Returns: boolean }
     }
     Enums: {
       agregateur_paiement: "fedapay" | "paydunya"
