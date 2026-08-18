@@ -25,7 +25,9 @@ export function melanger<T>(tableau: T[]): T[] {
   const copie = [...tableau];
   for (let i = copie.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [copie[i], copie[j]] = [copie[j], copie[i]];
+    const tmp = copie[i]!;
+    copie[i] = copie[j]!;
+    copie[j] = tmp;
   }
   return copie;
 }
