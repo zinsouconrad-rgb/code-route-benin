@@ -1,4 +1,3 @@
-<<<<<<< keep
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { BookOpen, ChevronRight, Shuffle, Target, TrendingUp } from "lucide-react";
