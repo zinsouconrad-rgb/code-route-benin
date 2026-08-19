@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedEntrainementRouteImport } from './routes/_authenticated/entrainement'
+import { Route as AuthenticatedMonAccesRouteImport } from './routes/_authenticated/mon-acces'
 import { Route as AuthenticatedTableauDeBordRouteImport } from './routes/_authenticated/tableau-de-bord'
 import { Route as AuthenticatedThemesRouteImport } from './routes/_authenticated/themes'
 
@@ -36,6 +37,11 @@ const AuthenticatedEntrainementRoute =
     path: '/entrainement',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedMonAccesRoute = AuthenticatedMonAccesRouteImport.update({
+  id: '/mon-acces',
+  path: '/mon-acces',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedTableauDeBordRoute =
   AuthenticatedTableauDeBordRouteImport.update({
     id: '/tableau-de-bord',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/entrainement': typeof AuthenticatedEntrainementRoute
+  '/mon-acces': typeof AuthenticatedMonAccesRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/themes': typeof AuthenticatedThemesRoute
 }
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/entrainement': typeof AuthenticatedEntrainementRoute
+  '/mon-acces': typeof AuthenticatedMonAccesRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/themes': typeof AuthenticatedThemesRoute
 }
@@ -68,20 +76,34 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/entrainement': typeof AuthenticatedEntrainementRoute
+  '/_authenticated/mon-acces': typeof AuthenticatedMonAccesRoute
   '/_authenticated/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/_authenticated/themes': typeof AuthenticatedThemesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/entrainement' | '/tableau-de-bord' | '/themes'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/entrainement'
+    | '/mon-acces'
+    | '/tableau-de-bord'
+    | '/themes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/entrainement' | '/tableau-de-bord' | '/themes'
+  to:
+    | '/'
+    | '/auth'
+    | '/entrainement'
+    | '/mon-acces'
+    | '/tableau-de-bord'
+    | '/themes'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/entrainement'
+    | '/_authenticated/mon-acces'
     | '/_authenticated/tableau-de-bord'
     | '/_authenticated/themes'
   fileRoutesById: FileRoutesById
@@ -122,6 +144,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEntrainementRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/mon-acces': {
+      id: '/_authenticated/mon-acces'
+      path: '/mon-acces'
+      fullPath: '/mon-acces'
+      preLoaderRoute: typeof AuthenticatedMonAccesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/tableau-de-bord': {
       id: '/_authenticated/tableau-de-bord'
       path: '/tableau-de-bord'
@@ -141,12 +170,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedEntrainementRoute: typeof AuthenticatedEntrainementRoute
+  AuthenticatedMonAccesRoute: typeof AuthenticatedMonAccesRoute
   AuthenticatedTableauDeBordRoute: typeof AuthenticatedTableauDeBordRoute
   AuthenticatedThemesRoute: typeof AuthenticatedThemesRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedEntrainementRoute: AuthenticatedEntrainementRoute,
+  AuthenticatedMonAccesRoute: AuthenticatedMonAccesRoute,
   AuthenticatedTableauDeBordRoute: AuthenticatedTableauDeBordRoute,
   AuthenticatedThemesRoute: AuthenticatedThemesRoute,
 }
