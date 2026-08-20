@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ImageQuestion } from "@/components/ImageQuestion";
 import { useCategories } from "@/lib/parametres";
 import { libelleStatut, libelleType, type Question } from "@/lib/questions";
 import { useSession } from "@/hooks/useAuth";
@@ -36,6 +37,7 @@ type Brouillon = {
   difficulte: "facile" | "moyen" | "difficile";
   explication: string;
   source: string;
+  image_url: string;
   statut_validation: "brouillon" | "a_valider" | "valide";
   reponses: { id?: string; texte: string; est_correcte: boolean }[];
 };
@@ -47,6 +49,7 @@ const vide = (): Brouillon => ({
   difficulte: "moyen",
   explication: "",
   source: "",
+  image_url: "",
   statut_validation: "brouillon",
   reponses: [
     { texte: "", est_correcte: true },
@@ -72,6 +75,27 @@ function AdminQuestions() {
   const [filtre, setFiltre] = useState<string>("tous");
   const [ouvert, setOuvert] = useState(false);
   const [brouillon, setBrouillon] = useState<Brouillon>(vide());
+  const [uploadEnCours, setUploadEnCours] = useState(false);
+
+  const televerserImage = async (fichier: File) => {
+    if (!fichier.type.startsWith("image/")) {
+      toast.error("Fichier image attendu (PNG, JPG…)");
+      return;
+    }
+    setUploadEnCours(true);
+    const ext = fichier.name.split(".").pop()?.toLowerCase() || "png";
+    const chemin = `admin/${crypto.randomUUID()}.${ext}`;
+    const { error } = await supabase.storage
+      .from("questions")
+      .upload(chemin, fichier, { upsert: true, contentType: fichier.type });
+    setUploadEnCours(false);
+    if (error) {
+      toast.error("Téléversement de l'image impossible");
+      return;
+    }
+    setBrouillon((b) => ({ ...b, image_url: chemin }));
+    toast.success("Image téléversée");
+  };
 
   const { data: questions, isLoading } = useQuery({
     queryKey: ["admin-questions"],
@@ -101,6 +125,7 @@ function AdminQuestions() {
         difficulte: b.difficulte,
         explication: parsed.explication || null,
         source: parsed.source || null,
+        image_url: b.image_url || null,
         statut_validation: b.statut_validation,
         cree_par: utilisateur?.id ?? null,
       };
@@ -160,6 +185,7 @@ function AdminQuestions() {
       difficulte: q.difficulte,
       explication: q.explication ?? "",
       source: q.source ?? "",
+      image_url: q.image_url ?? "",
       statut_validation: q.statut_validation,
       reponses: [...q.reponses]
         .sort((a, b) => a.ordre - b.ordre)
@@ -271,6 +297,36 @@ function AdminQuestions() {
                 maxLength={1000}
                 onChange={(e) => setBrouillon({ ...brouillon, enonce: e.target.value })}
               />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label>Image (panneau ou situation) — facultatif</Label>
+              {brouillon.image_url ? (
+                <div className="space-y-2">
+                  <ImageQuestion chemin={brouillon.image_url} alt="Aperçu de l'image" />
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-destructive"
+                    onClick={() => setBrouillon({ ...brouillon, image_url: "" })}
+                  >
+                    <Trash2 className="h-4 w-4" /> Retirer l'image
+                  </Button>
+                </div>
+              ) : (
+                <Input
+                  type="file"
+                  accept="image/*"
+                  disabled={uploadEnCours}
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) televerserImage(f);
+                  }}
+                />
+              )}
+              {uploadEnCours && (
+                <p className="text-xs text-muted-foreground">Téléversement en cours…</p>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-3">
