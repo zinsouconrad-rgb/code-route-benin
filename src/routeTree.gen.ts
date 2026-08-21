@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedEntrainementRouteImport } from './routes/_authenticated/entrainement'
+import { Route as AuthenticatedExamenBlancRouteImport } from './routes/_authenticated/examen-blanc'
 import { Route as AuthenticatedMonAccesRouteImport } from './routes/_authenticated/mon-acces'
 import { Route as AuthenticatedTableauDeBordRouteImport } from './routes/_authenticated/tableau-de-bord'
 import { Route as AuthenticatedThemesRouteImport } from './routes/_authenticated/themes'
@@ -44,6 +45,12 @@ const AuthenticatedEntrainementRoute =
   AuthenticatedEntrainementRouteImport.update({
     id: '/entrainement',
     path: '/entrainement',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedExamenBlancRoute =
+  AuthenticatedExamenBlancRouteImport.update({
+    id: '/examen-blanc',
+    path: '/examen-blanc',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedMonAccesRoute = AuthenticatedMonAccesRouteImport.update({
@@ -85,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/entrainement': typeof AuthenticatedEntrainementRoute
+  '/examen-blanc': typeof AuthenticatedExamenBlancRoute
   '/mon-acces': typeof AuthenticatedMonAccesRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/themes': typeof AuthenticatedThemesRoute
@@ -96,6 +104,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/entrainement': typeof AuthenticatedEntrainementRoute
+  '/examen-blanc': typeof AuthenticatedExamenBlancRoute
   '/mon-acces': typeof AuthenticatedMonAccesRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/themes': typeof AuthenticatedThemesRoute
@@ -110,6 +119,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/entrainement': typeof AuthenticatedEntrainementRoute
+  '/_authenticated/examen-blanc': typeof AuthenticatedExamenBlancRoute
   '/_authenticated/mon-acces': typeof AuthenticatedMonAccesRoute
   '/_authenticated/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/_authenticated/themes': typeof AuthenticatedThemesRoute
@@ -124,6 +134,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/admin'
     | '/entrainement'
+    | '/examen-blanc'
     | '/mon-acces'
     | '/tableau-de-bord'
     | '/themes'
@@ -135,6 +146,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/entrainement'
+    | '/examen-blanc'
     | '/mon-acces'
     | '/tableau-de-bord'
     | '/themes'
@@ -148,6 +160,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/admin'
     | '/_authenticated/entrainement'
+    | '/_authenticated/examen-blanc'
     | '/_authenticated/mon-acces'
     | '/_authenticated/tableau-de-bord'
     | '/_authenticated/themes'
@@ -197,6 +210,13 @@ declare module '@tanstack/react-router' {
       path: '/entrainement'
       fullPath: '/entrainement'
       preLoaderRoute: typeof AuthenticatedEntrainementRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/examen-blanc': {
+      id: '/_authenticated/examen-blanc'
+      path: '/examen-blanc'
+      fullPath: '/examen-blanc'
+      preLoaderRoute: typeof AuthenticatedExamenBlancRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/mon-acces': {
@@ -262,6 +282,7 @@ const AuthenticatedAdminRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedEntrainementRoute: typeof AuthenticatedEntrainementRoute
+  AuthenticatedExamenBlancRoute: typeof AuthenticatedExamenBlancRoute
   AuthenticatedMonAccesRoute: typeof AuthenticatedMonAccesRoute
   AuthenticatedTableauDeBordRoute: typeof AuthenticatedTableauDeBordRoute
   AuthenticatedThemesRoute: typeof AuthenticatedThemesRoute
@@ -270,6 +291,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedEntrainementRoute: AuthenticatedEntrainementRoute,
+  AuthenticatedExamenBlancRoute: AuthenticatedExamenBlancRoute,
   AuthenticatedMonAccesRoute: AuthenticatedMonAccesRoute,
   AuthenticatedTableauDeBordRoute: AuthenticatedTableauDeBordRoute,
   AuthenticatedThemesRoute: AuthenticatedThemesRoute,

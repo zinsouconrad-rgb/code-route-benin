@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { BookOpen, ChevronRight, Shuffle, Target, TrendingUp } from "lucide-react";
+import { BookOpen, ChevronRight, Shuffle, Target, Timer, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -106,6 +106,11 @@ function TableauDeBord() {
             <Shuffle className="h-4 w-4" /> Entraînement aléatoire
           </Link>
         </Button>
+        <Button asChild size="lg" className="justify-start sm:col-span-2">
+          <Link to="/examen-blanc">
+            <Timer className="h-4 w-4" /> Examen blanc chronométré
+          </Link>
+        </Button>
       </div>
 
       {faibles.length > 0 && (
@@ -131,7 +136,7 @@ function TableauDeBord() {
 
       <Card className="border-dashed shadow-none">
         <CardContent className="p-4 text-sm text-muted-foreground">
-          L'examen blanc chronométré, les favoris et la révision des erreurs arrivent en phase 2.
+          Les favoris et la révision des erreurs arrivent prochainement.
         </CardContent>
       </Card>
     </div>
