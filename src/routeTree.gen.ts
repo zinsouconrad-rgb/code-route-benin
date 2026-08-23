@@ -15,11 +15,15 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedEntrainementRouteImport } from './routes/_authenticated/entrainement'
 import { Route as AuthenticatedExamenBlancRouteImport } from './routes/_authenticated/examen-blanc'
+import { Route as AuthenticatedFavorisRouteImport } from './routes/_authenticated/favoris'
 import { Route as AuthenticatedMonAccesRouteImport } from './routes/_authenticated/mon-acces'
+import { Route as AuthenticatedRevisionRouteImport } from './routes/_authenticated/revision'
 import { Route as AuthenticatedTableauDeBordRouteImport } from './routes/_authenticated/tableau-de-bord'
 import { Route as AuthenticatedThemesRouteImport } from './routes/_authenticated/themes'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
 import { Route as AuthenticatedAdminQuestionsRouteImport } from './routes/_authenticated/admin.questions'
+import { Route as AuthenticatedAdminSignalementsRouteImport } from './routes/_authenticated/admin.signalements'
 import { Route as AuthenticatedAdminValidationRouteImport } from './routes/_authenticated/admin.validation'
 
 const IndexRoute = IndexRouteImport.update({
@@ -53,9 +57,19 @@ const AuthenticatedExamenBlancRoute =
     path: '/examen-blanc',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedFavorisRoute = AuthenticatedFavorisRouteImport.update({
+  id: '/favoris',
+  path: '/favoris',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedMonAccesRoute = AuthenticatedMonAccesRouteImport.update({
   id: '/mon-acces',
   path: '/mon-acces',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedRevisionRoute = AuthenticatedRevisionRouteImport.update({
+  id: '/revision',
+  path: '/revision',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedTableauDeBordRoute =
@@ -74,10 +88,22 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminCategoriesRoute =
+  AuthenticatedAdminCategoriesRouteImport.update({
+    id: '/categories',
+    path: '/categories',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminQuestionsRoute =
   AuthenticatedAdminQuestionsRouteImport.update({
     id: '/questions',
     path: '/questions',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminSignalementsRoute =
+  AuthenticatedAdminSignalementsRouteImport.update({
+    id: '/signalements',
+    path: '/signalements',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminValidationRoute =
@@ -93,10 +119,14 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/entrainement': typeof AuthenticatedEntrainementRoute
   '/examen-blanc': typeof AuthenticatedExamenBlancRoute
+  '/favoris': typeof AuthenticatedFavorisRoute
   '/mon-acces': typeof AuthenticatedMonAccesRoute
+  '/revision': typeof AuthenticatedRevisionRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/themes': typeof AuthenticatedThemesRoute
+  '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/questions': typeof AuthenticatedAdminQuestionsRoute
+  '/admin/signalements': typeof AuthenticatedAdminSignalementsRoute
   '/admin/validation': typeof AuthenticatedAdminValidationRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -105,10 +135,14 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/entrainement': typeof AuthenticatedEntrainementRoute
   '/examen-blanc': typeof AuthenticatedExamenBlancRoute
+  '/favoris': typeof AuthenticatedFavorisRoute
   '/mon-acces': typeof AuthenticatedMonAccesRoute
+  '/revision': typeof AuthenticatedRevisionRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/themes': typeof AuthenticatedThemesRoute
+  '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/questions': typeof AuthenticatedAdminQuestionsRoute
+  '/admin/signalements': typeof AuthenticatedAdminSignalementsRoute
   '/admin/validation': typeof AuthenticatedAdminValidationRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
@@ -120,10 +154,14 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/entrainement': typeof AuthenticatedEntrainementRoute
   '/_authenticated/examen-blanc': typeof AuthenticatedExamenBlancRoute
+  '/_authenticated/favoris': typeof AuthenticatedFavorisRoute
   '/_authenticated/mon-acces': typeof AuthenticatedMonAccesRoute
+  '/_authenticated/revision': typeof AuthenticatedRevisionRoute
   '/_authenticated/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/_authenticated/themes': typeof AuthenticatedThemesRoute
+  '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/_authenticated/admin/questions': typeof AuthenticatedAdminQuestionsRoute
+  '/_authenticated/admin/signalements': typeof AuthenticatedAdminSignalementsRoute
   '/_authenticated/admin/validation': typeof AuthenticatedAdminValidationRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -135,10 +173,14 @@ export interface FileRouteTypes {
     | '/admin'
     | '/entrainement'
     | '/examen-blanc'
+    | '/favoris'
     | '/mon-acces'
+    | '/revision'
     | '/tableau-de-bord'
     | '/themes'
+    | '/admin/categories'
     | '/admin/questions'
+    | '/admin/signalements'
     | '/admin/validation'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -147,10 +189,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/entrainement'
     | '/examen-blanc'
+    | '/favoris'
     | '/mon-acces'
+    | '/revision'
     | '/tableau-de-bord'
     | '/themes'
+    | '/admin/categories'
     | '/admin/questions'
+    | '/admin/signalements'
     | '/admin/validation'
     | '/admin'
   id:
@@ -161,10 +207,14 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/entrainement'
     | '/_authenticated/examen-blanc'
+    | '/_authenticated/favoris'
     | '/_authenticated/mon-acces'
+    | '/_authenticated/revision'
     | '/_authenticated/tableau-de-bord'
     | '/_authenticated/themes'
+    | '/_authenticated/admin/categories'
     | '/_authenticated/admin/questions'
+    | '/_authenticated/admin/signalements'
     | '/_authenticated/admin/validation'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
@@ -219,11 +269,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedExamenBlancRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/favoris': {
+      id: '/_authenticated/favoris'
+      path: '/favoris'
+      fullPath: '/favoris'
+      preLoaderRoute: typeof AuthenticatedFavorisRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/mon-acces': {
       id: '/_authenticated/mon-acces'
       path: '/mon-acces'
       fullPath: '/mon-acces'
       preLoaderRoute: typeof AuthenticatedMonAccesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/revision': {
+      id: '/_authenticated/revision'
+      path: '/revision'
+      fullPath: '/revision'
+      preLoaderRoute: typeof AuthenticatedRevisionRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/tableau-de-bord': {
@@ -247,11 +311,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/categories': {
+      id: '/_authenticated/admin/categories'
+      path: '/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AuthenticatedAdminCategoriesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/questions': {
       id: '/_authenticated/admin/questions'
       path: '/questions'
       fullPath: '/admin/questions'
       preLoaderRoute: typeof AuthenticatedAdminQuestionsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/signalements': {
+      id: '/_authenticated/admin/signalements'
+      path: '/signalements'
+      fullPath: '/admin/signalements'
+      preLoaderRoute: typeof AuthenticatedAdminSignalementsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/validation': {
@@ -265,13 +343,17 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
   AuthenticatedAdminQuestionsRoute: typeof AuthenticatedAdminQuestionsRoute
+  AuthenticatedAdminSignalementsRoute: typeof AuthenticatedAdminSignalementsRoute
   AuthenticatedAdminValidationRoute: typeof AuthenticatedAdminValidationRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
   AuthenticatedAdminQuestionsRoute: AuthenticatedAdminQuestionsRoute,
+  AuthenticatedAdminSignalementsRoute: AuthenticatedAdminSignalementsRoute,
   AuthenticatedAdminValidationRoute: AuthenticatedAdminValidationRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
@@ -283,7 +365,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedEntrainementRoute: typeof AuthenticatedEntrainementRoute
   AuthenticatedExamenBlancRoute: typeof AuthenticatedExamenBlancRoute
+  AuthenticatedFavorisRoute: typeof AuthenticatedFavorisRoute
   AuthenticatedMonAccesRoute: typeof AuthenticatedMonAccesRoute
+  AuthenticatedRevisionRoute: typeof AuthenticatedRevisionRoute
   AuthenticatedTableauDeBordRoute: typeof AuthenticatedTableauDeBordRoute
   AuthenticatedThemesRoute: typeof AuthenticatedThemesRoute
 }
@@ -292,7 +376,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedEntrainementRoute: AuthenticatedEntrainementRoute,
   AuthenticatedExamenBlancRoute: AuthenticatedExamenBlancRoute,
+  AuthenticatedFavorisRoute: AuthenticatedFavorisRoute,
   AuthenticatedMonAccesRoute: AuthenticatedMonAccesRoute,
+  AuthenticatedRevisionRoute: AuthenticatedRevisionRoute,
   AuthenticatedTableauDeBordRoute: AuthenticatedTableauDeBordRoute,
   AuthenticatedThemesRoute: AuthenticatedThemesRoute,
 }
