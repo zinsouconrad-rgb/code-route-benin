@@ -22,6 +22,7 @@ import { Route as AuthenticatedTableauDeBordRouteImport } from './routes/_authen
 import { Route as AuthenticatedThemesRouteImport } from './routes/_authenticated/themes'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminQuestionsRouteImport } from './routes/_authenticated/admin.questions'
+import { Route as AuthenticatedAdminSignalementsRouteImport } from './routes/_authenticated/admin.signalements'
 import { Route as AuthenticatedAdminValidationRouteImport } from './routes/_authenticated/admin.validation'
 
 const IndexRoute = IndexRouteImport.update({
@@ -92,6 +93,12 @@ const AuthenticatedAdminQuestionsRoute =
     path: '/questions',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminSignalementsRoute =
+  AuthenticatedAdminSignalementsRouteImport.update({
+    id: '/signalements',
+    path: '/signalements',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminValidationRoute =
   AuthenticatedAdminValidationRouteImport.update({
     id: '/validation',
@@ -111,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/themes': typeof AuthenticatedThemesRoute
   '/admin/questions': typeof AuthenticatedAdminQuestionsRoute
+  '/admin/signalements': typeof AuthenticatedAdminSignalementsRoute
   '/admin/validation': typeof AuthenticatedAdminValidationRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -125,6 +133,7 @@ export interface FileRoutesByTo {
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/themes': typeof AuthenticatedThemesRoute
   '/admin/questions': typeof AuthenticatedAdminQuestionsRoute
+  '/admin/signalements': typeof AuthenticatedAdminSignalementsRoute
   '/admin/validation': typeof AuthenticatedAdminValidationRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
@@ -142,6 +151,7 @@ export interface FileRoutesById {
   '/_authenticated/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/_authenticated/themes': typeof AuthenticatedThemesRoute
   '/_authenticated/admin/questions': typeof AuthenticatedAdminQuestionsRoute
+  '/_authenticated/admin/signalements': typeof AuthenticatedAdminSignalementsRoute
   '/_authenticated/admin/validation': typeof AuthenticatedAdminValidationRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -159,6 +169,7 @@ export interface FileRouteTypes {
     | '/tableau-de-bord'
     | '/themes'
     | '/admin/questions'
+    | '/admin/signalements'
     | '/admin/validation'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -173,6 +184,7 @@ export interface FileRouteTypes {
     | '/tableau-de-bord'
     | '/themes'
     | '/admin/questions'
+    | '/admin/signalements'
     | '/admin/validation'
     | '/admin'
   id:
@@ -189,6 +201,7 @@ export interface FileRouteTypes {
     | '/_authenticated/tableau-de-bord'
     | '/_authenticated/themes'
     | '/_authenticated/admin/questions'
+    | '/_authenticated/admin/signalements'
     | '/_authenticated/admin/validation'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
@@ -292,6 +305,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminQuestionsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/signalements': {
+      id: '/_authenticated/admin/signalements'
+      path: '/signalements'
+      fullPath: '/admin/signalements'
+      preLoaderRoute: typeof AuthenticatedAdminSignalementsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/validation': {
       id: '/_authenticated/admin/validation'
       path: '/validation'
@@ -304,12 +324,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminQuestionsRoute: typeof AuthenticatedAdminQuestionsRoute
+  AuthenticatedAdminSignalementsRoute: typeof AuthenticatedAdminSignalementsRoute
   AuthenticatedAdminValidationRoute: typeof AuthenticatedAdminValidationRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminQuestionsRoute: AuthenticatedAdminQuestionsRoute,
+  AuthenticatedAdminSignalementsRoute: AuthenticatedAdminSignalementsRoute,
   AuthenticatedAdminValidationRoute: AuthenticatedAdminValidationRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
