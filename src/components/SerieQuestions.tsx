@@ -119,7 +119,7 @@ export function SerieQuestions({
         index={indice}
         total={questions.length}
         utilisateurId={utilisateurId}
-        favori={favoris?.includes(question.id)}
+        favori={favoris?.includes(question.id) ?? false}
         onBasculerFavori={() =>
           basculer.mutate({ questionId: question.id, actif: !!favoris?.includes(question.id) })
         }
