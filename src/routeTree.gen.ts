@@ -16,6 +16,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedEntrainementRouteImport } from './routes/_authenticated/entrainement'
 import { Route as AuthenticatedExamenBlancRouteImport } from './routes/_authenticated/examen-blanc'
 import { Route as AuthenticatedMonAccesRouteImport } from './routes/_authenticated/mon-acces'
+import { Route as AuthenticatedRevisionRouteImport } from './routes/_authenticated/revision'
 import { Route as AuthenticatedTableauDeBordRouteImport } from './routes/_authenticated/tableau-de-bord'
 import { Route as AuthenticatedThemesRouteImport } from './routes/_authenticated/themes'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
@@ -58,6 +59,11 @@ const AuthenticatedMonAccesRoute = AuthenticatedMonAccesRouteImport.update({
   path: '/mon-acces',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRevisionRoute = AuthenticatedRevisionRouteImport.update({
+  id: '/revision',
+  path: '/revision',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedTableauDeBordRoute =
   AuthenticatedTableauDeBordRouteImport.update({
     id: '/tableau-de-bord',
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/entrainement': typeof AuthenticatedEntrainementRoute
   '/examen-blanc': typeof AuthenticatedExamenBlancRoute
   '/mon-acces': typeof AuthenticatedMonAccesRoute
+  '/revision': typeof AuthenticatedRevisionRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/themes': typeof AuthenticatedThemesRoute
   '/admin/questions': typeof AuthenticatedAdminQuestionsRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByTo {
   '/entrainement': typeof AuthenticatedEntrainementRoute
   '/examen-blanc': typeof AuthenticatedExamenBlancRoute
   '/mon-acces': typeof AuthenticatedMonAccesRoute
+  '/revision': typeof AuthenticatedRevisionRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/themes': typeof AuthenticatedThemesRoute
   '/admin/questions': typeof AuthenticatedAdminQuestionsRoute
@@ -121,6 +129,7 @@ export interface FileRoutesById {
   '/_authenticated/entrainement': typeof AuthenticatedEntrainementRoute
   '/_authenticated/examen-blanc': typeof AuthenticatedExamenBlancRoute
   '/_authenticated/mon-acces': typeof AuthenticatedMonAccesRoute
+  '/_authenticated/revision': typeof AuthenticatedRevisionRoute
   '/_authenticated/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/_authenticated/themes': typeof AuthenticatedThemesRoute
   '/_authenticated/admin/questions': typeof AuthenticatedAdminQuestionsRoute
@@ -136,6 +145,7 @@ export interface FileRouteTypes {
     | '/entrainement'
     | '/examen-blanc'
     | '/mon-acces'
+    | '/revision'
     | '/tableau-de-bord'
     | '/themes'
     | '/admin/questions'
@@ -148,6 +158,7 @@ export interface FileRouteTypes {
     | '/entrainement'
     | '/examen-blanc'
     | '/mon-acces'
+    | '/revision'
     | '/tableau-de-bord'
     | '/themes'
     | '/admin/questions'
@@ -162,6 +173,7 @@ export interface FileRouteTypes {
     | '/_authenticated/entrainement'
     | '/_authenticated/examen-blanc'
     | '/_authenticated/mon-acces'
+    | '/_authenticated/revision'
     | '/_authenticated/tableau-de-bord'
     | '/_authenticated/themes'
     | '/_authenticated/admin/questions'
@@ -226,6 +238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMonAccesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/revision': {
+      id: '/_authenticated/revision'
+      path: '/revision'
+      fullPath: '/revision'
+      preLoaderRoute: typeof AuthenticatedRevisionRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/tableau-de-bord': {
       id: '/_authenticated/tableau-de-bord'
       path: '/tableau-de-bord'
@@ -284,6 +303,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedEntrainementRoute: typeof AuthenticatedEntrainementRoute
   AuthenticatedExamenBlancRoute: typeof AuthenticatedExamenBlancRoute
   AuthenticatedMonAccesRoute: typeof AuthenticatedMonAccesRoute
+  AuthenticatedRevisionRoute: typeof AuthenticatedRevisionRoute
   AuthenticatedTableauDeBordRoute: typeof AuthenticatedTableauDeBordRoute
   AuthenticatedThemesRoute: typeof AuthenticatedThemesRoute
 }
@@ -293,6 +313,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedEntrainementRoute: AuthenticatedEntrainementRoute,
   AuthenticatedExamenBlancRoute: AuthenticatedExamenBlancRoute,
   AuthenticatedMonAccesRoute: AuthenticatedMonAccesRoute,
+  AuthenticatedRevisionRoute: AuthenticatedRevisionRoute,
   AuthenticatedTableauDeBordRoute: AuthenticatedTableauDeBordRoute,
   AuthenticatedThemesRoute: AuthenticatedThemesRoute,
 }
