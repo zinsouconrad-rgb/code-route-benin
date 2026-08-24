@@ -141,7 +141,9 @@ function TarifsAdmin() {
                   type="number"
                   value={ed.prix}
                   aria-label="Prix en FCFA"
-                  onChange={(e) => setEdition({ ...edition, [t.id]: { ...ed, prix: e.target.value } })}
+                  onChange={(e) =>
+                    setEdition({ ...edition, [t.id]: { ...ed, prix: e.target.value } })
+                  }
                 />
                 <Input
                   type="number"

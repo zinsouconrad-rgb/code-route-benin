@@ -28,7 +28,6 @@ const onglets = [
   { to: "/admin/stats", label: "Stats" },
 ] as const;
 
-
 function AdminLayout() {
   const { data: estAdmin, isLoading } = useEstAdmin();
   const { pathname } = useLocation();

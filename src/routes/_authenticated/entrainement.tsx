@@ -134,7 +134,6 @@ function Entrainement() {
     }
   };
 
-
   if (isLoading) return <p className="text-sm text-muted-foreground">Chargement des questions…</p>;
 
   if (liste.length === 0) {

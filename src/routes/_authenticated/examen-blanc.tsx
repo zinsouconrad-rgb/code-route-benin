@@ -35,7 +35,9 @@ export const Route = createFileRoute("/_authenticated/examen-blanc")({
 const formatDuree = (s: number) =>
   `${Math.floor(s / 60)
     .toString()
-    .padStart(2, "0")}:${Math.max(0, s % 60).toString().padStart(2, "0")}`;
+    .padStart(2, "0")}:${Math.max(0, s % 60)
+    .toString()
+    .padStart(2, "0")}`;
 
 function ExamenBlanc() {
   const { utilisateur } = useSession();
@@ -95,12 +97,12 @@ function ExamenBlanc() {
     const { data: session } = await supabase
       .from("sessions_examen")
       .insert({
-      user_id: utilisateur.id,
-      mode: "examen_blanc",
-      categorie_id: null,
-      score,
-      nombre_questions: total,
-      duree_secondes: secondes,
+        user_id: utilisateur.id,
+        mode: "examen_blanc",
+        categorie_id: null,
+        score,
+        nombre_questions: total,
+        duree_secondes: secondes,
         reussi: total > 0 && (score / total) * 100 >= seuil,
       })
       .select("id")
@@ -170,7 +172,9 @@ function ExamenBlanc() {
               Seuil de réussite : <span className="font-semibold">{seuil}%</span>
             </p>
             {quotaAtteint ? (
-              <InvitationPremium message={`La version Découverte donne droit à ${quotaGratuit} examen(s) blanc(s). Passez à l'accès complet pour continuer.`} />
+              <InvitationPremium
+                message={`La version Découverte donne droit à ${quotaGratuit} examen(s) blanc(s). Passez à l'accès complet pour continuer.`}
+              />
             ) : (
               <Button
                 size="lg"
@@ -259,7 +263,9 @@ function ExamenBlanc() {
         <div className="mb-2 flex items-center justify-between text-sm">
           <span
             className={
-              alerte ? "flex items-center gap-1.5 font-bold text-destructive" : "flex items-center gap-1.5 font-semibold"
+              alerte
+                ? "flex items-center gap-1.5 font-bold text-destructive"
+                : "flex items-center gap-1.5 font-semibold"
             }
           >
             <Clock className="h-4 w-4" /> {formatDuree(Math.max(0, restant))}
