@@ -1,6 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { BookOpen, ChevronRight, Shuffle, Target, Timer, TrendingUp } from "lucide-react";
+import {
+  BookOpen,
+  ChevronRight,
+  RotateCcw,
+  Shuffle,
+  Star,
+  Target,
+  Timer,
+  TrendingUp,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
