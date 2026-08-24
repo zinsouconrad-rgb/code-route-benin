@@ -65,7 +65,7 @@ function Entrainement() {
     ? (categories?.find((c) => c.id === categorie)?.nom ?? "Thème")
     : "Entraînement aléatoire";
 
-  const enregistrer = async (total: number, score: number) => {
+  const enregistrer = async (total: number, score: number, saisies: ReponseSaisie[]) => {
     if (!utilisateur) return;
     const { data: session } = await supabase
       .from("sessions_examen")
@@ -80,6 +80,8 @@ function Entrainement() {
       })
       .select("id")
       .maybeSingle();
+
+    if (session?.id) await enregistrerReponses(session.id, saisies);
 
     if (categorie) {
       const { data: existant } = await supabase
@@ -104,21 +106,29 @@ function Entrainement() {
       );
     }
     queryClient.invalidateQueries({ queryKey: ["progression"] });
+    queryClient.invalidateQueries({ queryKey: ["questions-ratees"] });
     return session?.id;
   };
 
   const liste = (questions ?? []) as Question[];
 
-  const suivant = async (_choix: string[], estCorrecte: boolean) => {
+  const suivant = async (choix: string[], estCorrecte: boolean) => {
+    const question = liste[indice]!;
+    const saisies = [
+      ...reponses,
+      { question_id: question.id, reponse_donnee: choix, est_correcte: estCorrecte },
+    ];
+    setReponses(saisies);
     const score = bonnes + (estCorrecte ? 1 : 0);
     setBonnes(score);
     if (indice + 1 >= liste.length) {
       setTermine(true);
-      await enregistrer(liste.length, score);
+      await enregistrer(liste.length, score, saisies);
     } else {
       setIndice(indice + 1);
     }
   };
+
 
   if (isLoading) return <p className="text-sm text-muted-foreground">Chargement des questions…</p>;
 
