@@ -11,6 +11,7 @@ import { InvitationPremium } from "@/components/InvitationPremium";
 import { accesComplet, useProfil, useSession } from "@/hooks/useAuth";
 import { nombreParam, useParametres } from "@/lib/parametres";
 import { chargerQuestionsValidees, type Question } from "@/lib/questions";
+import { enregistrerReponses, type ReponseSaisie } from "@/lib/reponses";
 
 export const Route = createFileRoute("/_authenticated/examen-blanc")({
   head: () => ({
@@ -56,6 +57,7 @@ function ExamenBlanc() {
   const [debut, setDebut] = useState<number | null>(null);
   const [restant, setRestant] = useState(dureeMinutes * 60);
   const [dureeFinale, setDureeFinale] = useState(0);
+  const [reponses, setReponses] = useState<ReponseSaisie[]>([]);
 
   const { data: dejaPasses } = useQuery({
     queryKey: ["examens-passes", utilisateur?.id],
@@ -83,26 +85,37 @@ function ExamenBlanc() {
 
   const liste = useMemo(() => (questions ?? []) as Question[], [questions]);
 
-  const enregistrer = async (total: number, score: number, secondes: number) => {
+  const enregistrer = async (
+    total: number,
+    score: number,
+    secondes: number,
+    saisies: ReponseSaisie[],
+  ) => {
     if (!utilisateur) return;
-    await supabase.from("sessions_examen").insert({
+    const { data: session } = await supabase
+      .from("sessions_examen")
+      .insert({
       user_id: utilisateur.id,
       mode: "examen_blanc",
       categorie_id: null,
       score,
       nombre_questions: total,
       duree_secondes: secondes,
-      reussi: total > 0 && (score / total) * 100 >= seuil,
-    });
+        reussi: total > 0 && (score / total) * 100 >= seuil,
+      })
+      .select("id")
+      .maybeSingle();
+    if (session?.id) await enregistrerReponses(session.id, saisies);
     queryClient.invalidateQueries({ queryKey: ["examens-passes"] });
     queryClient.invalidateQueries({ queryKey: ["progression"] });
+    queryClient.invalidateQueries({ queryKey: ["questions-ratees"] });
   };
 
-  const terminer = (score: number, total: number) => {
+  const terminer = (score: number, total: number, saisies: ReponseSaisie[] = reponses) => {
     const secondes = debut ? Math.round((Date.now() - debut) / 1000) : 0;
     setDureeFinale(secondes);
     setTermine(true);
-    void enregistrer(total, score, secondes);
+    void enregistrer(total, score, secondes, saisies);
   };
 
   // Chronomètre
@@ -117,10 +130,16 @@ function ExamenBlanc() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [demarre, termine, debut, dureeMinutes, bonnes, liste.length]);
 
-  const suivant = (_choix: string[], estCorrecte: boolean) => {
+  const suivant = (choix: string[], estCorrecte: boolean) => {
+    const question = liste[indice]!;
+    const saisies = [
+      ...reponses,
+      { question_id: question.id, reponse_donnee: choix, est_correcte: estCorrecte },
+    ];
+    setReponses(saisies);
     const score = bonnes + (estCorrecte ? 1 : 0);
     setBonnes(score);
-    if (indice + 1 >= liste.length) terminer(score, liste.length);
+    if (indice + 1 >= liste.length) terminer(score, liste.length, saisies);
     else setIndice(indice + 1);
   };
 
@@ -129,6 +148,7 @@ function ExamenBlanc() {
     setIndice(0);
     setBonnes(0);
     setTermine(false);
+    setReponses([]);
     setDebut(null);
     setRestant(dureeMinutes * 60);
     queryClient.removeQueries({ queryKey: ["examen"] });
