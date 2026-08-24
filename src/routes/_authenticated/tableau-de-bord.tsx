@@ -134,11 +134,19 @@ function TableauDeBord() {
         </Card>
       )}
 
-      <Card className="border-dashed shadow-none">
-        <CardContent className="p-4 text-sm text-muted-foreground">
-          Les favoris et la révision des erreurs arrivent prochainement.
-        </CardContent>
-      </Card>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Button asChild variant="outline" size="lg" className="justify-start">
+          <Link to="/revision">
+            <RotateCcw className="h-4 w-4" /> Réviser mes erreurs
+          </Link>
+        </Button>
+        <Button asChild variant="outline" size="lg" className="justify-start">
+          <Link to="/favoris">
+            <Star className="h-4 w-4" /> Mes favoris
+          </Link>
+        </Button>
+      </div>
+
     </div>
   );
 }
