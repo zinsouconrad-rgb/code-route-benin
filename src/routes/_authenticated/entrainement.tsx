@@ -12,6 +12,8 @@ import { InvitationPremium } from "@/components/InvitationPremium";
 import { accesComplet, useProfil, useSession } from "@/hooks/useAuth";
 import { nombreParam, useCategories, useParametres } from "@/lib/parametres";
 import { chargerQuestionsValidees, type Question } from "@/lib/questions";
+import { enregistrerReponses, type ReponseSaisie } from "@/lib/reponses";
+import { useBasculerFavori, useFavoris } from "@/lib/favoris";
 
 const schemaRecherche = z.object({ categorie: z.string().uuid().optional() });
 
@@ -54,6 +56,9 @@ function Entrainement() {
   const [bonnes, setBonnes] = useState(0);
   const [termine, setTermine] = useState(false);
   const [debut] = useState(() => Date.now());
+  const [reponses, setReponses] = useState<ReponseSaisie[]>([]);
+  const { data: favoris } = useFavoris();
+  const basculerFavori = useBasculerFavori();
 
   const { data: questions, isLoading } = useQuery({
     queryKey: ["serie", categorie ?? "aleatoire", limite],
@@ -165,6 +170,7 @@ function Entrainement() {
                 onClick={() => {
                   setIndice(0);
                   setBonnes(0);
+                  setReponses([]);
                   setTermine(false);
                   queryClient.invalidateQueries({ queryKey: ["serie"] });
                 }}
@@ -210,6 +216,13 @@ function Entrainement() {
         index={indice}
         total={liste.length}
         utilisateurId={utilisateur?.id ?? ""}
+        favori={favoris?.includes(question.id) ?? false}
+        onBasculerFavori={() =>
+          basculerFavori.mutate({
+            questionId: question.id,
+            actif: favoris?.includes(question.id) ?? false,
+          })
+        }
         onSuivant={suivant}
       />
     </div>
