@@ -26,6 +26,7 @@ import { Route as AuthenticatedAdminElevesRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAdminParametresRouteImport } from './routes/_authenticated/admin.parametres'
 import { Route as AuthenticatedAdminQuestionsRouteImport } from './routes/_authenticated/admin.questions'
 import { Route as AuthenticatedAdminSignalementsRouteImport } from './routes/_authenticated/admin.signalements'
+import { Route as AuthenticatedAdminStatsRouteImport } from './routes/_authenticated/admin.stats'
 import { Route as AuthenticatedAdminValidationRouteImport } from './routes/_authenticated/admin.validation'
 
 const IndexRoute = IndexRouteImport.update({
@@ -120,6 +121,11 @@ const AuthenticatedAdminSignalementsRoute =
     path: '/signalements',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminStatsRoute = AuthenticatedAdminStatsRouteImport.update({
+  id: '/stats',
+  path: '/stats',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminValidationRoute =
   AuthenticatedAdminValidationRouteImport.update({
     id: '/validation',
@@ -143,6 +149,7 @@ export interface FileRoutesByFullPath {
   '/admin/parametres': typeof AuthenticatedAdminParametresRoute
   '/admin/questions': typeof AuthenticatedAdminQuestionsRoute
   '/admin/signalements': typeof AuthenticatedAdminSignalementsRoute
+  '/admin/stats': typeof AuthenticatedAdminStatsRoute
   '/admin/validation': typeof AuthenticatedAdminValidationRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -161,6 +168,7 @@ export interface FileRoutesByTo {
   '/admin/parametres': typeof AuthenticatedAdminParametresRoute
   '/admin/questions': typeof AuthenticatedAdminQuestionsRoute
   '/admin/signalements': typeof AuthenticatedAdminSignalementsRoute
+  '/admin/stats': typeof AuthenticatedAdminStatsRoute
   '/admin/validation': typeof AuthenticatedAdminValidationRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
@@ -182,6 +190,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/parametres': typeof AuthenticatedAdminParametresRoute
   '/_authenticated/admin/questions': typeof AuthenticatedAdminQuestionsRoute
   '/_authenticated/admin/signalements': typeof AuthenticatedAdminSignalementsRoute
+  '/_authenticated/admin/stats': typeof AuthenticatedAdminStatsRoute
   '/_authenticated/admin/validation': typeof AuthenticatedAdminValidationRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -203,6 +212,7 @@ export interface FileRouteTypes {
     | '/admin/parametres'
     | '/admin/questions'
     | '/admin/signalements'
+    | '/admin/stats'
     | '/admin/validation'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -221,6 +231,7 @@ export interface FileRouteTypes {
     | '/admin/parametres'
     | '/admin/questions'
     | '/admin/signalements'
+    | '/admin/stats'
     | '/admin/validation'
     | '/admin'
   id:
@@ -241,6 +252,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/parametres'
     | '/_authenticated/admin/questions'
     | '/_authenticated/admin/signalements'
+    | '/_authenticated/admin/stats'
     | '/_authenticated/admin/validation'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
@@ -372,6 +384,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSignalementsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/stats': {
+      id: '/_authenticated/admin/stats'
+      path: '/stats'
+      fullPath: '/admin/stats'
+      preLoaderRoute: typeof AuthenticatedAdminStatsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/validation': {
       id: '/_authenticated/admin/validation'
       path: '/validation'
@@ -388,6 +407,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminParametresRoute: typeof AuthenticatedAdminParametresRoute
   AuthenticatedAdminQuestionsRoute: typeof AuthenticatedAdminQuestionsRoute
   AuthenticatedAdminSignalementsRoute: typeof AuthenticatedAdminSignalementsRoute
+  AuthenticatedAdminStatsRoute: typeof AuthenticatedAdminStatsRoute
   AuthenticatedAdminValidationRoute: typeof AuthenticatedAdminValidationRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
@@ -398,6 +418,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminParametresRoute: AuthenticatedAdminParametresRoute,
   AuthenticatedAdminQuestionsRoute: AuthenticatedAdminQuestionsRoute,
   AuthenticatedAdminSignalementsRoute: AuthenticatedAdminSignalementsRoute,
+  AuthenticatedAdminStatsRoute: AuthenticatedAdminStatsRoute,
   AuthenticatedAdminValidationRoute: AuthenticatedAdminValidationRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }

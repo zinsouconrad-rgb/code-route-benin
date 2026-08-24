@@ -21,7 +21,13 @@ export const Route = createFileRoute("/_authenticated/admin")({
 const onglets = [
   { to: "/admin/questions", label: "Questions" },
   { to: "/admin/validation", label: "Validation" },
+  { to: "/admin/signalements", label: "Signalements" },
+  { to: "/admin/categories", label: "Thèmes" },
+  { to: "/admin/eleves", label: "Élèves" },
+  { to: "/admin/parametres", label: "Réglages" },
+  { to: "/admin/stats", label: "Stats" },
 ] as const;
+
 
 function AdminLayout() {
   const { data: estAdmin, isLoading } = useEstAdmin();
