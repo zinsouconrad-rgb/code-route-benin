@@ -22,8 +22,11 @@ import { Route as AuthenticatedTableauDeBordRouteImport } from './routes/_authen
 import { Route as AuthenticatedThemesRouteImport } from './routes/_authenticated/themes'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
+import { Route as AuthenticatedAdminElevesRouteImport } from './routes/_authenticated/admin.eleves'
+import { Route as AuthenticatedAdminParametresRouteImport } from './routes/_authenticated/admin.parametres'
 import { Route as AuthenticatedAdminQuestionsRouteImport } from './routes/_authenticated/admin.questions'
 import { Route as AuthenticatedAdminSignalementsRouteImport } from './routes/_authenticated/admin.signalements'
+import { Route as AuthenticatedAdminStatsRouteImport } from './routes/_authenticated/admin.stats'
 import { Route as AuthenticatedAdminValidationRouteImport } from './routes/_authenticated/admin.validation'
 
 const IndexRoute = IndexRouteImport.update({
@@ -94,6 +97,18 @@ const AuthenticatedAdminCategoriesRoute =
     path: '/categories',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminElevesRoute =
+  AuthenticatedAdminElevesRouteImport.update({
+    id: '/eleves',
+    path: '/eleves',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminParametresRoute =
+  AuthenticatedAdminParametresRouteImport.update({
+    id: '/parametres',
+    path: '/parametres',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminQuestionsRoute =
   AuthenticatedAdminQuestionsRouteImport.update({
     id: '/questions',
@@ -106,6 +121,11 @@ const AuthenticatedAdminSignalementsRoute =
     path: '/signalements',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminStatsRoute = AuthenticatedAdminStatsRouteImport.update({
+  id: '/stats',
+  path: '/stats',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminValidationRoute =
   AuthenticatedAdminValidationRouteImport.update({
     id: '/validation',
@@ -125,8 +145,11 @@ export interface FileRoutesByFullPath {
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/themes': typeof AuthenticatedThemesRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
+  '/admin/eleves': typeof AuthenticatedAdminElevesRoute
+  '/admin/parametres': typeof AuthenticatedAdminParametresRoute
   '/admin/questions': typeof AuthenticatedAdminQuestionsRoute
   '/admin/signalements': typeof AuthenticatedAdminSignalementsRoute
+  '/admin/stats': typeof AuthenticatedAdminStatsRoute
   '/admin/validation': typeof AuthenticatedAdminValidationRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -141,8 +164,11 @@ export interface FileRoutesByTo {
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/themes': typeof AuthenticatedThemesRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
+  '/admin/eleves': typeof AuthenticatedAdminElevesRoute
+  '/admin/parametres': typeof AuthenticatedAdminParametresRoute
   '/admin/questions': typeof AuthenticatedAdminQuestionsRoute
   '/admin/signalements': typeof AuthenticatedAdminSignalementsRoute
+  '/admin/stats': typeof AuthenticatedAdminStatsRoute
   '/admin/validation': typeof AuthenticatedAdminValidationRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
@@ -160,8 +186,11 @@ export interface FileRoutesById {
   '/_authenticated/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/_authenticated/themes': typeof AuthenticatedThemesRoute
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
+  '/_authenticated/admin/eleves': typeof AuthenticatedAdminElevesRoute
+  '/_authenticated/admin/parametres': typeof AuthenticatedAdminParametresRoute
   '/_authenticated/admin/questions': typeof AuthenticatedAdminQuestionsRoute
   '/_authenticated/admin/signalements': typeof AuthenticatedAdminSignalementsRoute
+  '/_authenticated/admin/stats': typeof AuthenticatedAdminStatsRoute
   '/_authenticated/admin/validation': typeof AuthenticatedAdminValidationRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -179,8 +208,11 @@ export interface FileRouteTypes {
     | '/tableau-de-bord'
     | '/themes'
     | '/admin/categories'
+    | '/admin/eleves'
+    | '/admin/parametres'
     | '/admin/questions'
     | '/admin/signalements'
+    | '/admin/stats'
     | '/admin/validation'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -195,8 +227,11 @@ export interface FileRouteTypes {
     | '/tableau-de-bord'
     | '/themes'
     | '/admin/categories'
+    | '/admin/eleves'
+    | '/admin/parametres'
     | '/admin/questions'
     | '/admin/signalements'
+    | '/admin/stats'
     | '/admin/validation'
     | '/admin'
   id:
@@ -213,8 +248,11 @@ export interface FileRouteTypes {
     | '/_authenticated/tableau-de-bord'
     | '/_authenticated/themes'
     | '/_authenticated/admin/categories'
+    | '/_authenticated/admin/eleves'
+    | '/_authenticated/admin/parametres'
     | '/_authenticated/admin/questions'
     | '/_authenticated/admin/signalements'
+    | '/_authenticated/admin/stats'
     | '/_authenticated/admin/validation'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
@@ -318,6 +356,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCategoriesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/eleves': {
+      id: '/_authenticated/admin/eleves'
+      path: '/eleves'
+      fullPath: '/admin/eleves'
+      preLoaderRoute: typeof AuthenticatedAdminElevesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/parametres': {
+      id: '/_authenticated/admin/parametres'
+      path: '/parametres'
+      fullPath: '/admin/parametres'
+      preLoaderRoute: typeof AuthenticatedAdminParametresRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/questions': {
       id: '/_authenticated/admin/questions'
       path: '/questions'
@@ -332,6 +384,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSignalementsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/stats': {
+      id: '/_authenticated/admin/stats'
+      path: '/stats'
+      fullPath: '/admin/stats'
+      preLoaderRoute: typeof AuthenticatedAdminStatsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/validation': {
       id: '/_authenticated/admin/validation'
       path: '/validation'
@@ -344,16 +403,22 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
+  AuthenticatedAdminElevesRoute: typeof AuthenticatedAdminElevesRoute
+  AuthenticatedAdminParametresRoute: typeof AuthenticatedAdminParametresRoute
   AuthenticatedAdminQuestionsRoute: typeof AuthenticatedAdminQuestionsRoute
   AuthenticatedAdminSignalementsRoute: typeof AuthenticatedAdminSignalementsRoute
+  AuthenticatedAdminStatsRoute: typeof AuthenticatedAdminStatsRoute
   AuthenticatedAdminValidationRoute: typeof AuthenticatedAdminValidationRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
+  AuthenticatedAdminElevesRoute: AuthenticatedAdminElevesRoute,
+  AuthenticatedAdminParametresRoute: AuthenticatedAdminParametresRoute,
   AuthenticatedAdminQuestionsRoute: AuthenticatedAdminQuestionsRoute,
   AuthenticatedAdminSignalementsRoute: AuthenticatedAdminSignalementsRoute,
+  AuthenticatedAdminStatsRoute: AuthenticatedAdminStatsRoute,
   AuthenticatedAdminValidationRoute: AuthenticatedAdminValidationRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }

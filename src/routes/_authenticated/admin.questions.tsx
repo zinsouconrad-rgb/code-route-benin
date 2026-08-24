@@ -110,8 +110,7 @@ function AdminQuestions() {
   });
 
   const liste = useMemo(
-    () =>
-      (questions ?? []).filter((q) => filtre === "tous" || q.statut_validation === filtre),
+    () => (questions ?? []).filter((q) => filtre === "tous" || q.statut_validation === filtre),
     [questions, filtre],
   );
 
@@ -334,7 +333,9 @@ function AdminQuestions() {
                 <Label>Type</Label>
                 <Select
                   value={brouillon.type}
-                  onValueChange={(v) => setBrouillon({ ...brouillon, type: v as Brouillon["type"] })}
+                  onValueChange={(v) =>
+                    setBrouillon({ ...brouillon, type: v as Brouillon["type"] })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -409,9 +410,7 @@ function AdminQuestions() {
               >
                 <Plus className="h-3.5 w-3.5" /> Ajouter une réponse
               </Button>
-              <p className="text-xs text-muted-foreground">
-                Cochez la ou les bonnes réponses.
-              </p>
+              <p className="text-xs text-muted-foreground">Cochez la ou les bonnes réponses.</p>
             </div>
 
             <div className="space-y-1.5">
