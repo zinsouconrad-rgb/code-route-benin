@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, Trophy } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { CarteQuestion } from "@/components/CarteQuestion";
 import { supabase } from "@/integrations/supabase/client";
 import { useBasculerFavori, useFavoris } from "@/lib/favoris";
+import { enfilerSession } from "@/lib/hors-ligne";
 import { enregistrerReponses, type ReponseSaisie } from "@/lib/reponses";
 import type { Question } from "@/lib/questions";
+
 
 type Props = {
   titre: string;
@@ -39,23 +42,32 @@ export function SerieQuestions({
   const cloturer = async (liste: ReponseSaisie[], score: number) => {
     setTermine(true);
     if (!enregistrerSession || !utilisateurId) return;
+    const commun = {
+      user_id: utilisateurId,
+      mode: "entrainement" as const,
+      categorie_id: null,
+      score,
+      nombre_questions: questions.length,
+      duree_secondes: Math.round((Date.now() - debut) / 1000),
+      reussi: questions.length > 0 && score === questions.length,
+    };
+
+    if (!navigator.onLine) {
+      enfilerSession({ ...commun, reponses: liste });
+      toast.info("Hors ligne : votre série sera synchronisée au retour du réseau.");
+      return;
+    }
+
     const { data } = await supabase
       .from("sessions_examen")
-      .insert({
-        user_id: utilisateurId,
-        mode: "entrainement",
-        categorie_id: null,
-        score,
-        nombre_questions: questions.length,
-        duree_secondes: Math.round((Date.now() - debut) / 1000),
-        reussi: questions.length > 0 && score === questions.length,
-      })
+      .insert(commun)
       .select("id")
       .maybeSingle();
     if (data?.id) await enregistrerReponses(data.id, liste);
     queryClient.invalidateQueries({ queryKey: ["questions-ratees"] });
     queryClient.invalidateQueries({ queryKey: ["progression"] });
   };
+
 
   const suivant = async (choix: string[], estCorrecte: boolean) => {
     const question = questions[indice]!;

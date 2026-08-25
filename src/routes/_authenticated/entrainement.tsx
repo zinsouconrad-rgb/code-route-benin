@@ -2,6 +2,7 @@ import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, Trophy } from "lucide-react";
+import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -13,7 +14,9 @@ import { accesComplet, useProfil, useSession } from "@/hooks/useAuth";
 import { nombreParam, useCategories, useParametres } from "@/lib/parametres";
 import { chargerQuestionsValidees, type Question } from "@/lib/questions";
 import { enregistrerReponses, type ReponseSaisie } from "@/lib/reponses";
+import { enfilerSession } from "@/lib/hors-ligne";
 import { useBasculerFavori, useFavoris } from "@/lib/favoris";
+
 
 const schemaRecherche = z.object({ categorie: z.string().uuid().optional() });
 
@@ -72,6 +75,23 @@ function Entrainement() {
 
   const enregistrer = async (total: number, score: number, saisies: ReponseSaisie[]) => {
     if (!utilisateur) return;
+    const reussi = total > 0 && score / total >= 0.8;
+
+    if (!navigator.onLine) {
+      enfilerSession({
+        user_id: utilisateur.id,
+        mode: "entrainement",
+        categorie_id: categorie ?? null,
+        score,
+        nombre_questions: total,
+        duree_secondes: Math.round((Date.now() - debut) / 1000),
+        reussi,
+        reponses: saisies,
+      });
+      toast.info("Hors ligne : votre série sera synchronisée au retour du réseau.");
+      return;
+    }
+
     const { data: session } = await supabase
       .from("sessions_examen")
       .insert({
@@ -81,12 +101,13 @@ function Entrainement() {
         score,
         nombre_questions: total,
         duree_secondes: Math.round((Date.now() - debut) / 1000),
-        reussi: total > 0 && score / total >= 0.8,
+        reussi,
       })
       .select("id")
       .maybeSingle();
 
     if (session?.id) await enregistrerReponses(session.id, saisies);
+
 
     if (categorie) {
       const { data: existant } = await supabase
