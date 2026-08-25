@@ -23,6 +23,7 @@ import { Route as AuthenticatedThemesRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
 import { Route as AuthenticatedAdminElevesRouteImport } from './routes/_authenticated/admin.eleves'
+import { Route as AuthenticatedAdminImportRouteImport } from './routes/_authenticated/admin.import'
 import { Route as AuthenticatedAdminParametresRouteImport } from './routes/_authenticated/admin.parametres'
 import { Route as AuthenticatedAdminQuestionsRouteImport } from './routes/_authenticated/admin.questions'
 import { Route as AuthenticatedAdminSignalementsRouteImport } from './routes/_authenticated/admin.signalements'
@@ -103,6 +104,12 @@ const AuthenticatedAdminElevesRoute =
     path: '/eleves',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminImportRoute =
+  AuthenticatedAdminImportRouteImport.update({
+    id: '/import',
+    path: '/import',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminParametresRoute =
   AuthenticatedAdminParametresRouteImport.update({
     id: '/parametres',
@@ -146,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/themes': typeof AuthenticatedThemesRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/eleves': typeof AuthenticatedAdminElevesRoute
+  '/admin/import': typeof AuthenticatedAdminImportRoute
   '/admin/parametres': typeof AuthenticatedAdminParametresRoute
   '/admin/questions': typeof AuthenticatedAdminQuestionsRoute
   '/admin/signalements': typeof AuthenticatedAdminSignalementsRoute
@@ -165,6 +173,7 @@ export interface FileRoutesByTo {
   '/themes': typeof AuthenticatedThemesRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/eleves': typeof AuthenticatedAdminElevesRoute
+  '/admin/import': typeof AuthenticatedAdminImportRoute
   '/admin/parametres': typeof AuthenticatedAdminParametresRoute
   '/admin/questions': typeof AuthenticatedAdminQuestionsRoute
   '/admin/signalements': typeof AuthenticatedAdminSignalementsRoute
@@ -187,6 +196,7 @@ export interface FileRoutesById {
   '/_authenticated/themes': typeof AuthenticatedThemesRoute
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/_authenticated/admin/eleves': typeof AuthenticatedAdminElevesRoute
+  '/_authenticated/admin/import': typeof AuthenticatedAdminImportRoute
   '/_authenticated/admin/parametres': typeof AuthenticatedAdminParametresRoute
   '/_authenticated/admin/questions': typeof AuthenticatedAdminQuestionsRoute
   '/_authenticated/admin/signalements': typeof AuthenticatedAdminSignalementsRoute
@@ -209,6 +219,7 @@ export interface FileRouteTypes {
     | '/themes'
     | '/admin/categories'
     | '/admin/eleves'
+    | '/admin/import'
     | '/admin/parametres'
     | '/admin/questions'
     | '/admin/signalements'
@@ -228,6 +239,7 @@ export interface FileRouteTypes {
     | '/themes'
     | '/admin/categories'
     | '/admin/eleves'
+    | '/admin/import'
     | '/admin/parametres'
     | '/admin/questions'
     | '/admin/signalements'
@@ -249,6 +261,7 @@ export interface FileRouteTypes {
     | '/_authenticated/themes'
     | '/_authenticated/admin/categories'
     | '/_authenticated/admin/eleves'
+    | '/_authenticated/admin/import'
     | '/_authenticated/admin/parametres'
     | '/_authenticated/admin/questions'
     | '/_authenticated/admin/signalements'
@@ -363,6 +376,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminElevesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/import': {
+      id: '/_authenticated/admin/import'
+      path: '/import'
+      fullPath: '/admin/import'
+      preLoaderRoute: typeof AuthenticatedAdminImportRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/parametres': {
       id: '/_authenticated/admin/parametres'
       path: '/parametres'
@@ -404,6 +424,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
   AuthenticatedAdminElevesRoute: typeof AuthenticatedAdminElevesRoute
+  AuthenticatedAdminImportRoute: typeof AuthenticatedAdminImportRoute
   AuthenticatedAdminParametresRoute: typeof AuthenticatedAdminParametresRoute
   AuthenticatedAdminQuestionsRoute: typeof AuthenticatedAdminQuestionsRoute
   AuthenticatedAdminSignalementsRoute: typeof AuthenticatedAdminSignalementsRoute
@@ -415,6 +436,7 @@ interface AuthenticatedAdminRouteChildren {
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
   AuthenticatedAdminElevesRoute: AuthenticatedAdminElevesRoute,
+  AuthenticatedAdminImportRoute: AuthenticatedAdminImportRoute,
   AuthenticatedAdminParametresRoute: AuthenticatedAdminParametresRoute,
   AuthenticatedAdminQuestionsRoute: AuthenticatedAdminQuestionsRoute,
   AuthenticatedAdminSignalementsRoute: AuthenticatedAdminSignalementsRoute,
