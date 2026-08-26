@@ -12,6 +12,9 @@ import { accesComplet, useProfil, useSession } from "@/hooks/useAuth";
 import { nombreParam, useParametres } from "@/lib/parametres";
 import { chargerQuestionsValidees, type Question } from "@/lib/questions";
 import { enregistrerReponses, type ReponseSaisie } from "@/lib/reponses";
+import { enfilerSession } from "@/lib/hors-ligne";
+import { toast } from "sonner";
+
 
 export const Route = createFileRoute("/_authenticated/examen-blanc")({
   head: () => ({
@@ -94,20 +97,29 @@ function ExamenBlanc() {
     saisies: ReponseSaisie[],
   ) => {
     if (!utilisateur) return;
+    const commun = {
+      user_id: utilisateur.id,
+      mode: "examen_blanc" as const,
+      categorie_id: null,
+      score,
+      nombre_questions: total,
+      duree_secondes: secondes,
+      reussi: total > 0 && (score / total) * 100 >= seuil,
+    };
+
+    if (!navigator.onLine) {
+      enfilerSession({ ...commun, reponses: saisies });
+      toast.info("Hors ligne : votre examen sera synchronisé au retour du réseau.");
+      return;
+    }
+
     const { data: session } = await supabase
       .from("sessions_examen")
-      .insert({
-        user_id: utilisateur.id,
-        mode: "examen_blanc",
-        categorie_id: null,
-        score,
-        nombre_questions: total,
-        duree_secondes: secondes,
-        reussi: total > 0 && (score / total) * 100 >= seuil,
-      })
+      .insert(commun)
       .select("id")
       .maybeSingle();
     if (session?.id) await enregistrerReponses(session.id, saisies);
+
     queryClient.invalidateQueries({ queryKey: ["examens-passes"] });
     queryClient.invalidateQueries({ queryKey: ["progression"] });
     queryClient.invalidateQueries({ queryKey: ["questions-ratees"] });

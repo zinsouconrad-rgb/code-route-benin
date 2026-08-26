@@ -1,16 +1,19 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { GraduationCap, LogOut, Shield } from "lucide-react";
+import { CloudOff, GraduationCap, LogOut, RefreshCw, Shield } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useEstAdmin } from "@/hooks/useAuth";
 import { useParametres } from "@/lib/parametres";
+import { useSynchronisation } from "@/lib/hors-ligne";
 
 export function EnTete() {
   const { data: estAdmin } = useEstAdmin();
   const { data: parametres } = useParametres();
+  const { enLigne, enAttente } = useSynchronisation();
   const navigate = useNavigate();
   const nom = parametres?.["nom_etablissement"] || "LE MAGNIFICAT";
   const logo = parametres?.["logo_url"];
+
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur">
