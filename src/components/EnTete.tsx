@@ -1,16 +1,19 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { GraduationCap, LogOut, Shield } from "lucide-react";
+import { CloudOff, GraduationCap, LogOut, RefreshCw, Shield } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useEstAdmin } from "@/hooks/useAuth";
 import { useParametres } from "@/lib/parametres";
+import { useSynchronisation } from "@/lib/hors-ligne";
 
 export function EnTete() {
   const { data: estAdmin } = useEstAdmin();
   const { data: parametres } = useParametres();
+  const { enLigne, enAttente } = useSynchronisation();
   const navigate = useNavigate();
   const nom = parametres?.["nom_etablissement"] || "LE MAGNIFICAT";
   const logo = parametres?.["logo_url"];
+
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur">
@@ -26,6 +29,19 @@ export function EnTete() {
           <span className="truncate text-sm font-bold tracking-tight">{nom}</span>
         </Link>
         <div className="ml-auto flex items-center gap-1">
+          {!enLigne && (
+            <span className="flex items-center gap-1 rounded-full border border-warning/40 bg-warning/10 px-2 py-1 text-[11px] font-medium text-warning">
+              <CloudOff className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Hors ligne</span>
+            </span>
+          )}
+          {enLigne && enAttente > 0 && (
+            <span className="flex items-center gap-1 rounded-full border border-border bg-secondary px-2 py-1 text-[11px] font-medium text-muted-foreground">
+              <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+              {enAttente}
+            </span>
+          )}
+
           {estAdmin && (
             <Button asChild variant="ghost" size="sm">
               <Link to="/admin">
