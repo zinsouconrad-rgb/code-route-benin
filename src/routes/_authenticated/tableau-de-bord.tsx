@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   BookOpen,
   ChevronRight,
+  Flame,
   RotateCcw,
   Shuffle,
   Star,
@@ -16,7 +17,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { accesComplet, useProfil, useSession } from "@/hooks/useAuth";
-import { useCategories } from "@/lib/parametres";
+import { nombreParam, useCategories, useParametres } from "@/lib/parametres";
+import { useFlamme } from "@/lib/flamme";
 
 export const Route = createFileRoute("/_authenticated/tableau-de-bord")({
   head: () => ({
