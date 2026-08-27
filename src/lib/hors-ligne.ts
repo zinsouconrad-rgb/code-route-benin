@@ -159,6 +159,7 @@ export function useSynchronisation() {
       toast.success(`${n} série${n > 1 ? "s" : ""} synchronisée${n > 1 ? "s" : ""}.`);
       queryClient.invalidateQueries({ queryKey: ["progression"] });
       queryClient.invalidateQueries({ queryKey: ["questions-ratees"] });
+      queryClient.invalidateQueries({ queryKey: ["flamme"] });
     });
     return () => {
       annule = true;

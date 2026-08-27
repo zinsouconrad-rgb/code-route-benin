@@ -123,6 +123,7 @@ function ExamenBlanc() {
     queryClient.invalidateQueries({ queryKey: ["examens-passes"] });
     queryClient.invalidateQueries({ queryKey: ["progression"] });
     queryClient.invalidateQueries({ queryKey: ["questions-ratees"] });
+    queryClient.invalidateQueries({ queryKey: ["flamme"] });
   };
 
   const terminer = (score: number, total: number, saisies: ReponseSaisie[] = reponses) => {
