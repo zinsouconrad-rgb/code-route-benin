@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { GraduationCap } from "lucide-react";
+import { Eye, EyeOff, GraduationCap, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -36,9 +44,45 @@ const schemaInscription = z.object({
   motDePasse: z.string().min(6, "6 caractères minimum").max(72),
 });
 
+function ChampMotDePasse({
+  id,
+  autoComplete,
+  minLength,
+}: {
+  id: string;
+  autoComplete: string;
+  minLength?: number;
+}) {
+  const [visible, setVisible] = useState(false);
+  return (
+    <div className="relative">
+      <Input
+        id={id}
+        name="motDePasse"
+        type={visible ? "text" : "password"}
+        required
+        minLength={minLength}
+        autoComplete={autoComplete}
+        className="pr-10"
+      />
+      <button
+        type="button"
+        onClick={() => setVisible((v) => !v)}
+        aria-label={visible ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+        className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-muted-foreground hover:text-foreground"
+      >
+        {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+      </button>
+    </div>
+  );
+}
+
 function PageAuth() {
   const navigate = useNavigate();
   const [enCours, setEnCours] = useState(false);
+  const [reinitOuverte, setReinitOuverte] = useState(false);
+  const [emailReinit, setEmailReinit] = useState("");
+  const [envoiReinit, setEnvoiReinit] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -97,6 +141,27 @@ function PageAuth() {
     navigate({ to: "/tableau-de-bord" });
   };
 
+  const reinitialiser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const email = emailReinit.trim();
+    if (!z.string().email().safeParse(email).success) {
+      toast.error("Adresse e-mail invalide");
+      return;
+    }
+    setEnvoiReinit(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setEnvoiReinit(false);
+    if (error) {
+      toast.error("Envoi impossible pour le moment. Réessayez.");
+      return;
+    }
+    toast.success("E-mail envoyé ! Cliquez sur le lien reçu pour choisir un nouveau mot de passe.");
+    setReinitOuverte(false);
+    setEmailReinit("");
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 py-10">
       <div className="w-full max-w-md">
@@ -127,14 +192,48 @@ function PageAuth() {
                     <Input id="c-email" name="email" type="email" required autoComplete="email" />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="c-mdp">Mot de passe</Label>
-                    <Input
-                      id="c-mdp"
-                      name="motDePasse"
-                      type="password"
-                      required
-                      autoComplete="current-password"
-                    />
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="c-mdp">Mot de passe</Label>
+                      <Dialog open={reinitOuverte} onOpenChange={setReinitOuverte}>
+                        <DialogTrigger asChild>
+                          <button
+                            type="button"
+                            className="text-xs font-medium text-primary hover:underline"
+                          >
+                            Mot de passe oublié ?
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle className="flex items-center gap-2">
+                              <Mail className="h-5 w-5 text-primary" /> Réinitialiser le mot de passe
+                            </DialogTitle>
+                            <DialogDescription>
+                              Saisissez l'adresse e-mail de votre compte. Vous recevrez un lien pour
+                              choisir un nouveau mot de passe.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <form onSubmit={reinitialiser} className="space-y-3">
+                            <div className="space-y-1.5">
+                              <Label htmlFor="reinit-email">Adresse e-mail</Label>
+                              <Input
+                                id="reinit-email"
+                                type="email"
+                                required
+                                value={emailReinit}
+                                onChange={(e) => setEmailReinit(e.target.value)}
+                                placeholder="vous@exemple.com"
+                                autoComplete="email"
+                              />
+                            </div>
+                            <Button type="submit" className="w-full" disabled={envoiReinit}>
+                              {envoiReinit ? "Envoi en cours…" : "Envoyer le lien"}
+                            </Button>
+                          </form>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                    <ChampMotDePasse id="c-mdp" autoComplete="current-password" />
                   </div>
                   <Button type="submit" className="w-full" size="lg" disabled={enCours}>
                     Se connecter
@@ -158,14 +257,7 @@ function PageAuth() {
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="i-mdp">Mot de passe</Label>
-                    <Input
-                      id="i-mdp"
-                      name="motDePasse"
-                      type="password"
-                      required
-                      minLength={6}
-                      autoComplete="new-password"
-                    />
+                    <ChampMotDePasse id="i-mdp" autoComplete="new-password" minLength={6} />
                   </div>
                   <Button type="submit" className="w-full" size="lg" disabled={enCours}>
                     Créer mon compte
