@@ -40,7 +40,12 @@ function TableauDeBord() {
   const { utilisateur } = useSession();
   const { data: profil } = useProfil();
   const { data: categories } = useCategories();
+  const { data: parametres } = useParametres();
+  const { data: flamme } = useFlamme(utilisateur?.id);
   const complet = accesComplet(profil);
+  const objectifJour = nombreParam(parametres, "objectif_quotidien_questions", 10);
+  const questionsJour = flamme?.questionsAujourdhui ?? 0;
+  const objectifAtteint = questionsJour >= objectifJour;
 
   const { data: progression } = useQuery({
     queryKey: ["progression", utilisateur?.id],
@@ -85,6 +90,37 @@ function TableauDeBord() {
           </Link>
         </Button>
       </section>
+
+      <div className="grid grid-cols-2 gap-3">
+        <Card className="shadow-card">
+          <CardContent className="p-4">
+            <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Flame className="h-3.5 w-3.5 text-warning" /> Votre flamme
+            </p>
+            <p className="mt-1 text-2xl font-bold">
+              {flamme?.serie ?? 0} jour{(flamme?.serie ?? 0) > 1 ? "s" : ""}
+            </p>
+            <p className="text-xs text-muted-foreground">de révision d'affilée</p>
+          </CardContent>
+        </Card>
+        <Card className="shadow-card">
+          <CardContent className="p-4">
+            <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Target className="h-3.5 w-3.5" /> Objectif du jour
+            </p>
+            <p className="mt-1 text-2xl font-bold">
+              {Math.min(questionsJour, objectifJour)} / {objectifJour}
+            </p>
+            <Progress
+              value={Math.min(100, (questionsJour / objectifJour) * 100)}
+              className="mt-2 h-1.5"
+            />
+            <p className="mt-1 text-xs text-muted-foreground">
+              {objectifAtteint ? "Objectif atteint, bravo !" : "questions aujourd'hui"}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
 
       <div className="grid grid-cols-2 gap-3">
         <Card className="shadow-card">

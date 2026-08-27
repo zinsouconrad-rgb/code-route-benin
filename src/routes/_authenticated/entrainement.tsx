@@ -133,6 +133,7 @@ function Entrainement() {
     }
     queryClient.invalidateQueries({ queryKey: ["progression"] });
     queryClient.invalidateQueries({ queryKey: ["questions-ratees"] });
+    queryClient.invalidateQueries({ queryKey: ["flamme"] });
     return session?.id;
   };
 

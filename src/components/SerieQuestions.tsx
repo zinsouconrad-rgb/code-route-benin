@@ -66,6 +66,7 @@ export function SerieQuestions({
     if (data?.id) await enregistrerReponses(data.id, liste);
     queryClient.invalidateQueries({ queryKey: ["questions-ratees"] });
     queryClient.invalidateQueries({ queryKey: ["progression"] });
+    queryClient.invalidateQueries({ queryKey: ["flamme"] });
   };
 
 
