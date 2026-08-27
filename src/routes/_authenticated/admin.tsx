@@ -1,6 +1,12 @@
+import { useState } from "react";
 import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEstAdmin } from "@/hooks/useAuth";
+
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -32,18 +38,40 @@ const onglets = [
 function AdminLayout() {
   const { data: estAdmin, isLoading } = useEstAdmin();
   const { pathname } = useLocation();
+  const queryClient = useQueryClient();
+  const [envoi, setEnvoi] = useState(false);
+
+  const reclamer = async () => {
+    setEnvoi(true);
+    const { data, error } = await supabase.rpc("reclamer_admin_initial");
+    setEnvoi(false);
+    if (error || !data) {
+      toast.error("Impossible : un administrateur existe déjà pour cette application.");
+      return;
+    }
+    toast.success("Vous êtes maintenant administrateur.");
+    queryClient.invalidateQueries({ queryKey: ["role-admin"] });
+  };
 
   if (isLoading) return <p className="text-sm text-muted-foreground">Vérification des droits…</p>;
 
   if (!estAdmin) {
     return (
       <Card className="shadow-card">
-        <CardContent className="p-5 text-center text-sm text-muted-foreground">
-          Cet espace est réservé aux administrateurs de l'auto-école.
+        <CardContent className="space-y-3 p-5 text-center text-sm text-muted-foreground">
+          <p>Cet espace est réservé aux administrateurs de l'auto-école.</p>
+          <p className="text-xs">
+            Première configuration : si aucun administrateur n'existe encore, réclamez le rôle avec
+            ce compte.
+          </p>
+          <Button onClick={reclamer} disabled={envoi}>
+            Devenir administrateur
+          </Button>
         </CardContent>
       </Card>
     );
   }
+
 
   return (
     <div className="space-y-4">
