@@ -1,12 +1,26 @@
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Session } from "@supabase/supabase-js";
+import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 
 export type Profil = Tables<"profils">;
 
-export function useSession() {
+type EtatSession = {
+  session: Session | null;
+  utilisateur: User | null;
+  chargement: boolean;
+};
+
+const ContexteSession = createContext<EtatSession | null>(null);
+
+/**
+ * Un seul abonnement onAuthStateChange pour toute l'application.
+ * Auparavant chaque appel à useSession() créait son propre abonnement et son
+ * propre getSession() : sur une page combinant useSession + useProfil +
+ * useEstAdmin, cela multipliait les appels réseau et les invalidations de cache.
+ */
+export function FournisseurSession({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [chargement, setChargement] = useState(true);
   const queryClient = useQueryClient();
@@ -16,17 +30,35 @@ export function useSession() {
       setSession(s);
       setChargement(false);
       if (event === "SIGNED_IN" || event === "SIGNED_OUT" || event === "USER_UPDATED") {
-        queryClient.invalidateQueries();
+        // Différé : appeler Supabase (ce que font les refetch déclenchés par
+        // invalidateQueries) directement dans ce callback peut bloquer le
+        // renouvellement du jeton.
+        setTimeout(() => queryClient.invalidateQueries(), 0);
       }
     });
+
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
       setChargement(false);
     });
+
     return () => sub.subscription.unsubscribe();
   }, [queryClient]);
 
-  return { session, utilisateur: session?.user ?? null, chargement };
+  const valeur = useMemo<EtatSession>(
+    () => ({ session, utilisateur: session?.user ?? null, chargement }),
+    [session, chargement],
+  );
+
+  return <ContexteSession.Provider value={valeur}>{children}</ContexteSession.Provider>;
+}
+
+export function useSession(): EtatSession {
+  const contexte = useContext(ContexteSession);
+  if (!contexte) {
+    throw new Error("useSession doit être utilisé à l'intérieur de <FournisseurSession>.");
+  }
+  return contexte;
 }
 
 export function useProfil() {
