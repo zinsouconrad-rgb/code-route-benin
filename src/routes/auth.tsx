@@ -44,6 +44,35 @@ const schemaInscription = z.object({
   motDePasse: z.string().min(6, "6 caractères minimum").max(72),
 });
 
+/**
+ * Traduit une erreur Supabase en message utile. Auparavant toute erreur
+ * affichait « identifiants incorrects », ce qui masquait les causes les plus
+ * fréquentes : réseau coupé (courant en 3G) et e-mail non confirmé.
+ */
+function messageErreurAuth(erreur: {
+  message?: string | undefined;
+  status?: number | undefined;
+}): string {
+  const m = (erreur.message ?? "").toLowerCase();
+  const horsLigne = typeof navigator !== "undefined" && navigator.onLine === false;
+  if (horsLigne || m.includes("failed to fetch") || m.includes("network") || m.includes("fetch")) {
+    return "Pas de connexion Internet. Vérifiez votre réseau, puis réessayez.";
+  }
+  if (m.includes("not confirmed")) {
+    return "Votre adresse e-mail n'est pas encore confirmée. Ouvrez le lien reçu par e-mail.";
+  }
+  if (erreur.status === 429 || m.includes("rate limit") || m.includes("too many")) {
+    return "Trop de tentatives. Patientez quelques minutes avant de réessayer.";
+  }
+  if (m.includes("invalid login") || m.includes("invalid credentials")) {
+    return "E-mail ou mot de passe incorrect.";
+  }
+  if (m.includes("already")) {
+    return "Un compte existe déjà avec cette adresse.";
+  }
+  return "Opération impossible pour le moment. Réessayez.";
+}
+
 function ChampMotDePasse({
   id,
   autoComplete,
@@ -94,13 +123,17 @@ function PageAuth() {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
     setEnCours(true);
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email: String(f.get("email")).trim(),
       password: String(f.get("motDePasse")),
     });
     setEnCours(false);
     if (error) {
-      toast.error("Connexion impossible : identifiants incorrects.");
+      toast.error(messageErreurAuth(error));
+      return;
+    }
+    if (!data.session) {
+      toast.error("Connexion incomplète. Réessayez.");
       return;
     }
     navigate({ to: "/tableau-de-bord" });
@@ -120,20 +153,26 @@ function PageAuth() {
       return;
     }
     setEnCours(true);
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: parse.data.email,
       password: parse.data.motDePasse,
       options: {
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: `${window.location.origin}/tableau-de-bord`,
         data: { nom_complet: parse.data.nom_complet, telephone: parse.data.telephone },
       },
     });
     setEnCours(false);
     if (error) {
-      toast.error(
-        error.message.includes("already")
-          ? "Un compte existe déjà avec cette adresse."
-          : "Inscription impossible pour le moment.",
+      toast.error(messageErreurAuth(error));
+      return;
+    }
+    // Si la confirmation d'e-mail est activée dans Supabase, signUp ne renvoie
+    // aucune session : rediriger vers l'espace candidat renverrait aussitôt
+    // l'élève ici sans explication. On l'informe et on reste sur la page.
+    if (!data.session) {
+      toast.success(
+        `Compte créé ! Un e-mail de confirmation a été envoyé à ${parse.data.email}. Ouvrez le lien reçu pour activer votre accès.`,
+        { duration: 10000 },
       );
       return;
     }
@@ -206,7 +245,8 @@ function PageAuth() {
                         <DialogContent>
                           <DialogHeader>
                             <DialogTitle className="flex items-center gap-2">
-                              <Mail className="h-5 w-5 text-primary" /> Réinitialiser le mot de passe
+                              <Mail className="h-5 w-5 text-primary" /> Réinitialiser le mot de
+                              passe
                             </DialogTitle>
                             <DialogDescription>
                               Saisissez l'adresse e-mail de votre compte. Vous recevrez un lien pour
