@@ -70,6 +70,56 @@ export type Database = {
           },
         ]
       }
+      fiches: {
+        Row: {
+          categorie_id: string | null
+          contenu: string
+          cree_par: string | null
+          date_creation: string
+          id: string
+          image_url: string | null
+          maj: string
+          ordre_affichage: number
+          source: string | null
+          statut_validation: Database["public"]["Enums"]["statut_validation"]
+          titre: string
+        }
+        Insert: {
+          categorie_id?: string | null
+          contenu?: string
+          cree_par?: string | null
+          date_creation?: string
+          id?: string
+          image_url?: string | null
+          maj?: string
+          ordre_affichage?: number
+          source?: string | null
+          statut_validation?: Database["public"]["Enums"]["statut_validation"]
+          titre: string
+        }
+        Update: {
+          categorie_id?: string | null
+          contenu?: string
+          cree_par?: string | null
+          date_creation?: string
+          id?: string
+          image_url?: string | null
+          maj?: string
+          ordre_affichage?: number
+          source?: string | null
+          statut_validation?: Database["public"]["Enums"]["statut_validation"]
+          titre?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fiches_categorie_id_fkey"
+            columns: ["categorie_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       paiements: {
         Row: {
           agregateur: Database["public"]["Enums"]["agregateur_paiement"] | null
@@ -465,6 +515,7 @@ export type Database = {
     Functions: {
       a_acces_complet: { Args: { _user_id: string }; Returns: boolean }
       activer_code_magnificat: { Args: { _code: string }; Returns: boolean }
+      expirer_acces: { Args: never; Returns: number }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
