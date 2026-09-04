@@ -19,6 +19,7 @@ import { Progress } from "@/components/ui/progress";
 import { accesComplet, useProfil, useSession } from "@/hooks/useAuth";
 import { nombreParam, useCategories, useParametres } from "@/lib/parametres";
 import { useFlamme } from "@/lib/flamme";
+import { CourbeProgression } from "@/components/CourbeProgression";
 
 export const Route = createFileRoute("/_authenticated/tableau-de-bord")({
   head: () => ({
