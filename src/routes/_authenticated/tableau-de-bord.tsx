@@ -161,6 +161,8 @@ function TableauDeBord() {
         </Button>
       </div>
 
+      <CourbeProgression userId={utilisateur?.id} />
+
       {faibles.length > 0 && (
         <Card className="shadow-card">
           <CardHeader>
