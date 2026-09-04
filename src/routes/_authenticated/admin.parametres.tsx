@@ -86,8 +86,115 @@ function Parametres() {
         </CardContent>
       </Card>
 
+      <BrandingAdmin />
       <TarifsAdmin />
     </div>
+  );
+}
+
+/** Nom, logo et numéro WhatsApp de l'auto-école. */
+function BrandingAdmin() {
+  const queryClient = useQueryClient();
+  const { nom, logo, whatsapp } = useBranding();
+  const [nomSaisi, setNomSaisi] = useState<string | null>(null);
+  const [whatsappSaisi, setWhatsappSaisi] = useState<string | null>(null);
+  const [envoi, setEnvoi] = useState(false);
+
+  const rafraichir = () => {
+    queryClient.invalidateQueries({ queryKey: ["parametres"] });
+    queryClient.invalidateQueries({ queryKey: ["admin-parametres"] });
+  };
+
+  const ecrire = async (cle: string, valeur: string) => {
+    const { error } = await supabase
+      .from("parametres")
+      .upsert({ cle, valeur, maj: new Date().toISOString() }, { onConflict: "cle" });
+    if (error) throw error;
+  };
+
+  const enregistrer = async () => {
+    setEnvoi(true);
+    try {
+      await ecrire("nom_etablissement", (nomSaisi ?? nom).trim());
+      await ecrire("whatsapp_numero", (whatsappSaisi ?? whatsapp).replace(/[^0-9]/g, ""));
+      toast.success("Identité de l'auto-école enregistrée.");
+      rafraichir();
+    } catch {
+      toast.error("Enregistrement impossible.");
+    } finally {
+      setEnvoi(false);
+    }
+  };
+
+  const televerserLogo = async (fichier: File) => {
+    setEnvoi(true);
+    const chemin = `logo-${Date.now()}-${fichier.name.replace(/[^\w.-]/g, "_")}`;
+    const { error } = await supabase.storage
+      .from("branding")
+      .upload(chemin, fichier, { upsert: true });
+    if (error) {
+      setEnvoi(false);
+      toast.error("Envoi du logo impossible.");
+      return;
+    }
+    try {
+      await ecrire("logo_url", chemin);
+      toast.success("Logo mis à jour.");
+      rafraichir();
+    } catch {
+      toast.error("Enregistrement du logo impossible.");
+    } finally {
+      setEnvoi(false);
+    }
+  };
+
+  return (
+    <Card className="shadow-card">
+      <CardContent className="space-y-3 p-4">
+        <h2 className="text-sm font-semibold">Identité de l'auto-école</h2>
+        <div className="space-y-1.5">
+          <Label htmlFor="nom_etab">Nom affiché</Label>
+          <Input
+            id="nom_etab"
+            value={nomSaisi ?? nom}
+            onChange={(e) => setNomSaisi(e.target.value)}
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="whatsapp">Numéro WhatsApp (format international, ex. 22997000000)</Label>
+          <Input
+            id="whatsapp"
+            inputMode="numeric"
+            value={whatsappSaisi ?? whatsapp}
+            onChange={(e) => setWhatsappSaisi(e.target.value)}
+            placeholder="229…"
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="logo">Logo</Label>
+          {logo && (
+            <img
+              src={logo}
+              alt="Logo actuel de l'auto-école"
+              className="h-16 w-16 rounded border border-border object-contain"
+            />
+          )}
+          <Input
+            id="logo"
+            type="file"
+            accept="image/*"
+            disabled={envoi}
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) televerserLogo(f);
+            }}
+          />
+        </div>
+        <Button onClick={enregistrer} disabled={envoi}>
+          Enregistrer l'identité
+        </Button>
+      </CardContent>
+    </Card>
   );
 }
 
