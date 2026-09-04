@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { EnTete } from "@/components/EnTete";
+import { BoutonWhatsApp } from "@/components/BoutonWhatsApp";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
