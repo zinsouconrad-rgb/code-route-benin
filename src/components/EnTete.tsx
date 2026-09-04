@@ -1,18 +1,17 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { CloudOff, GraduationCap, LogOut, RefreshCw, Shield } from "lucide-react";
+import { BookMarked, CloudOff, GraduationCap, LogOut, RefreshCw, Shield } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useEstAdmin } from "@/hooks/useAuth";
-import { useParametres } from "@/lib/parametres";
+import { useBranding } from "@/lib/branding";
 import { useSynchronisation } from "@/lib/hors-ligne";
 
 export function EnTete() {
   const { data: estAdmin } = useEstAdmin();
-  const { data: parametres } = useParametres();
+  const { nom, logo } = useBranding();
   const { enLigne, enAttente } = useSynchronisation();
   const navigate = useNavigate();
-  const nom = parametres?.["nom_etablissement"] || "LE MAGNIFICAT";
-  const logo = parametres?.["logo_url"];
+
 
 
   return (
