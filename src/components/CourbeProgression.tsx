@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 type Point = { jour: string; taux: number; questions: number };
 
 /** Évolution du taux de réussite sur les 30 derniers jours. */
-export function CourbeProgression({ userId }: { userId?: string }) {
+export function CourbeProgression({ userId }: { userId?: string | undefined }) {
   const { data, isLoading } = useQuery({
     queryKey: ["courbe-progression", userId],
     enabled: !!userId,
