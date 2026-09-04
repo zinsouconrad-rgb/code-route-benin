@@ -18,9 +18,10 @@ export const Route = createFileRoute("/_authenticated")({
   component: () => (
     <div className="min-h-screen bg-background">
       <EnTete />
-      <main className="mx-auto max-w-4xl px-4 py-5 pb-16">
+      <main className="mx-auto max-w-4xl px-4 py-5 pb-20">
         <Outlet />
       </main>
+      <BoutonWhatsApp />
     </div>
   ),
 });
