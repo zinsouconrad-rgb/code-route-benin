@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
+  BookMarked,
   BookOpen,
   ChevronRight,
   Flame,
@@ -19,6 +20,7 @@ import { Progress } from "@/components/ui/progress";
 import { accesComplet, useProfil, useSession } from "@/hooks/useAuth";
 import { nombreParam, useCategories, useParametres } from "@/lib/parametres";
 import { useFlamme } from "@/lib/flamme";
+import { CourbeProgression } from "@/components/CourbeProgression";
 
 export const Route = createFileRoute("/_authenticated/tableau-de-bord")({
   head: () => ({
@@ -160,6 +162,8 @@ function TableauDeBord() {
         </Button>
       </div>
 
+      <CourbeProgression userId={utilisateur?.id} />
+
       {faibles.length > 0 && (
         <Card className="shadow-card">
           <CardHeader>
@@ -190,6 +194,11 @@ function TableauDeBord() {
         <Button asChild variant="outline" size="lg" className="justify-start">
           <Link to="/favoris">
             <Star className="h-4 w-4" /> Mes favoris
+          </Link>
+        </Button>
+        <Button asChild variant="outline" size="lg" className="justify-start sm:col-span-2">
+          <Link to="/fiches">
+            <BookMarked className="h-4 w-4" /> Fiches et panneaux
           </Link>
         </Button>
       </div>

@@ -29,6 +29,7 @@ const onglets = [
   { to: "/admin/validation", label: "Validation" },
   { to: "/admin/signalements", label: "Signalements" },
   { to: "/admin/categories", label: "Thèmes" },
+  { to: "/admin/fiches", label: "Fiches" },
   { to: "/admin/import", label: "Import CSV" },
   { to: "/admin/eleves", label: "Élèves" },
   { to: "/admin/parametres", label: "Réglages" },

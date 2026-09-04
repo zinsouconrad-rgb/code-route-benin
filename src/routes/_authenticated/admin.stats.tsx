@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -41,6 +42,33 @@ function Stats() {
         .select("id", { count: "exact", head: true })
         .eq("statut_validation", "a_valider");
 
+      const depuis30 = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
+      const { data: sessions30 } = await supabase
+        .from("sessions_examen")
+        .select("date, user_id, mode, reussi")
+        .gte("date", depuis30)
+        .order("date", { ascending: true });
+
+      const depuis7 = Date.now() - 7 * 24 * 3600 * 1000;
+      const actifs7 = new Set(
+        (sessions30 ?? []).filter((s) => new Date(s.date).getTime() >= depuis7).map((s) => s.user_id),
+      ).size;
+      const examens = (sessions30 ?? []).filter((s) => s.mode === "examen_blanc");
+      const tauxExamens =
+        examens.length > 0
+          ? Math.round((examens.filter((s) => s.reussi).length / examens.length) * 100)
+          : 0;
+
+      const parJour = new Map<string, number>();
+      for (const s of sessions30 ?? []) {
+        const jour = new Date(s.date).toISOString().slice(0, 10);
+        parJour.set(jour, (parJour.get(jour) ?? 0) + 1);
+      }
+      const activite = [...parJour.entries()].map(([jour, sessions]) => ({
+        jour: new Date(jour).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" }),
+        sessions,
+      }));
+
       const { data: reponses } = await supabase
         .from("reponses_utilisateur")
         .select("question_id, est_correcte, questions(enonce)")
@@ -67,6 +95,9 @@ function Stats() {
         validees: validees ?? 0,
         aValider: aValider ?? 0,
         difficiles,
+        actifs7,
+        tauxExamens,
+        activite,
       };
     },
   });
@@ -79,6 +110,8 @@ function Stats() {
     { label: "Questions publiées", valeur: data.validees },
     { label: "En attente de validation", valeur: data.aValider },
     { label: "Signalements", valeur: data.signalements },
+    { label: "Élèves actifs (7 j)", valeur: data.actifs7 },
+    { label: "Réussite examens blancs", valeur: `${data.tauxExamens}%` },
   ];
 
   return (
@@ -93,6 +126,33 @@ function Stats() {
           </Card>
         ))}
       </div>
+
+      {data.activite.length > 1 && (
+        <Card className="shadow-card">
+          <CardHeader>
+            <CardTitle className="text-base">Activité (30 derniers jours)</CardTitle>
+          </CardHeader>
+          <CardContent className="h-56 pl-0">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data.activite} margin={{ top: 5, right: 12, bottom: 0, left: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                <XAxis dataKey="jour" tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
+                <YAxis width={30} tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
+                <Tooltip
+                  contentStyle={{
+                    background: "var(--card)",
+                    border: "1px solid var(--border)",
+                    borderRadius: 8,
+                    fontSize: 12,
+                  }}
+                  formatter={(v: number) => [v, "Sessions"]}
+                />
+                <Bar dataKey="sessions" fill="var(--primary)" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      )}
 
       <Card className="shadow-card">
         <CardHeader>
