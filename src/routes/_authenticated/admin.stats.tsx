@@ -41,6 +41,33 @@ function Stats() {
         .select("id", { count: "exact", head: true })
         .eq("statut_validation", "a_valider");
 
+      const depuis30 = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
+      const { data: sessions30 } = await supabase
+        .from("sessions_examen")
+        .select("date, user_id, mode, reussi")
+        .gte("date", depuis30)
+        .order("date", { ascending: true });
+
+      const depuis7 = Date.now() - 7 * 24 * 3600 * 1000;
+      const actifs7 = new Set(
+        (sessions30 ?? []).filter((s) => new Date(s.date).getTime() >= depuis7).map((s) => s.user_id),
+      ).size;
+      const examens = (sessions30 ?? []).filter((s) => s.mode === "examen_blanc");
+      const tauxExamens =
+        examens.length > 0
+          ? Math.round((examens.filter((s) => s.reussi).length / examens.length) * 100)
+          : 0;
+
+      const parJour = new Map<string, number>();
+      for (const s of sessions30 ?? []) {
+        const jour = new Date(s.date).toISOString().slice(0, 10);
+        parJour.set(jour, (parJour.get(jour) ?? 0) + 1);
+      }
+      const activite = [...parJour.entries()].map(([jour, sessions]) => ({
+        jour: new Date(jour).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" }),
+        sessions,
+      }));
+
       const { data: reponses } = await supabase
         .from("reponses_utilisateur")
         .select("question_id, est_correcte, questions(enonce)")
