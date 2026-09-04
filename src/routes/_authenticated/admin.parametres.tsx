@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { formatFcfa, useTarifs } from "@/lib/parametres";
+import { useBranding } from "@/lib/branding";
 
 export const Route = createFileRoute("/_authenticated/admin/parametres")({
   head: () => ({
