@@ -126,6 +126,33 @@ function Stats() {
         ))}
       </div>
 
+      {data.activite.length > 1 && (
+        <Card className="shadow-card">
+          <CardHeader>
+            <CardTitle className="text-base">Activité (30 derniers jours)</CardTitle>
+          </CardHeader>
+          <CardContent className="h-56 pl-0">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data.activite} margin={{ top: 5, right: 12, bottom: 0, left: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                <XAxis dataKey="jour" tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
+                <YAxis width={30} tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
+                <Tooltip
+                  contentStyle={{
+                    background: "var(--card)",
+                    border: "1px solid var(--border)",
+                    borderRadius: 8,
+                    fontSize: 12,
+                  }}
+                  formatter={(v: number) => [v, "Sessions"]}
+                />
+                <Bar dataKey="sessions" fill="var(--primary)" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      )}
+
       <Card className="shadow-card">
         <CardHeader>
           <CardTitle className="text-base">Questions les plus ratées</CardTitle>
