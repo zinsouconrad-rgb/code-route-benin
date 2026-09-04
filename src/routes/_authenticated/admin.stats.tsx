@@ -94,6 +94,9 @@ function Stats() {
         validees: validees ?? 0,
         aValider: aValider ?? 0,
         difficiles,
+        actifs7,
+        tauxExamens,
+        activite,
       };
     },
   });
