@@ -17,6 +17,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedEntrainementRouteImport } from './routes/_authenticated/entrainement'
 import { Route as AuthenticatedExamenBlancRouteImport } from './routes/_authenticated/examen-blanc'
 import { Route as AuthenticatedFavorisRouteImport } from './routes/_authenticated/favoris'
+import { Route as AuthenticatedFichesRouteImport } from './routes/_authenticated/fiches'
 import { Route as AuthenticatedMonAccesRouteImport } from './routes/_authenticated/mon-acces'
 import { Route as AuthenticatedRevisionRouteImport } from './routes/_authenticated/revision'
 import { Route as AuthenticatedTableauDeBordRouteImport } from './routes/_authenticated/tableau-de-bord'
@@ -70,6 +71,11 @@ const AuthenticatedExamenBlancRoute =
 const AuthenticatedFavorisRoute = AuthenticatedFavorisRouteImport.update({
   id: '/favoris',
   path: '/favoris',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFichesRoute = AuthenticatedFichesRouteImport.update({
+  id: '/fiches',
+  path: '/fiches',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedMonAccesRoute = AuthenticatedMonAccesRouteImport.update({
@@ -154,6 +160,7 @@ export interface FileRoutesByFullPath {
   '/entrainement': typeof AuthenticatedEntrainementRoute
   '/examen-blanc': typeof AuthenticatedExamenBlancRoute
   '/favoris': typeof AuthenticatedFavorisRoute
+  '/fiches': typeof AuthenticatedFichesRoute
   '/mon-acces': typeof AuthenticatedMonAccesRoute
   '/revision': typeof AuthenticatedRevisionRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
@@ -175,6 +182,7 @@ export interface FileRoutesByTo {
   '/entrainement': typeof AuthenticatedEntrainementRoute
   '/examen-blanc': typeof AuthenticatedExamenBlancRoute
   '/favoris': typeof AuthenticatedFavorisRoute
+  '/fiches': typeof AuthenticatedFichesRoute
   '/mon-acces': typeof AuthenticatedMonAccesRoute
   '/revision': typeof AuthenticatedRevisionRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
@@ -199,6 +207,7 @@ export interface FileRoutesById {
   '/_authenticated/entrainement': typeof AuthenticatedEntrainementRoute
   '/_authenticated/examen-blanc': typeof AuthenticatedExamenBlancRoute
   '/_authenticated/favoris': typeof AuthenticatedFavorisRoute
+  '/_authenticated/fiches': typeof AuthenticatedFichesRoute
   '/_authenticated/mon-acces': typeof AuthenticatedMonAccesRoute
   '/_authenticated/revision': typeof AuthenticatedRevisionRoute
   '/_authenticated/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
@@ -223,6 +232,7 @@ export interface FileRouteTypes {
     | '/entrainement'
     | '/examen-blanc'
     | '/favoris'
+    | '/fiches'
     | '/mon-acces'
     | '/revision'
     | '/tableau-de-bord'
@@ -244,6 +254,7 @@ export interface FileRouteTypes {
     | '/entrainement'
     | '/examen-blanc'
     | '/favoris'
+    | '/fiches'
     | '/mon-acces'
     | '/revision'
     | '/tableau-de-bord'
@@ -267,6 +278,7 @@ export interface FileRouteTypes {
     | '/_authenticated/entrainement'
     | '/_authenticated/examen-blanc'
     | '/_authenticated/favoris'
+    | '/_authenticated/fiches'
     | '/_authenticated/mon-acces'
     | '/_authenticated/revision'
     | '/_authenticated/tableau-de-bord'
@@ -345,6 +357,13 @@ declare module '@tanstack/react-router' {
       path: '/favoris'
       fullPath: '/favoris'
       preLoaderRoute: typeof AuthenticatedFavorisRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/fiches': {
+      id: '/_authenticated/fiches'
+      path: '/fiches'
+      fullPath: '/fiches'
+      preLoaderRoute: typeof AuthenticatedFichesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/mon-acces': {
@@ -473,6 +492,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedEntrainementRoute: typeof AuthenticatedEntrainementRoute
   AuthenticatedExamenBlancRoute: typeof AuthenticatedExamenBlancRoute
   AuthenticatedFavorisRoute: typeof AuthenticatedFavorisRoute
+  AuthenticatedFichesRoute: typeof AuthenticatedFichesRoute
   AuthenticatedMonAccesRoute: typeof AuthenticatedMonAccesRoute
   AuthenticatedRevisionRoute: typeof AuthenticatedRevisionRoute
   AuthenticatedTableauDeBordRoute: typeof AuthenticatedTableauDeBordRoute
@@ -484,6 +504,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedEntrainementRoute: AuthenticatedEntrainementRoute,
   AuthenticatedExamenBlancRoute: AuthenticatedExamenBlancRoute,
   AuthenticatedFavorisRoute: AuthenticatedFavorisRoute,
+  AuthenticatedFichesRoute: AuthenticatedFichesRoute,
   AuthenticatedMonAccesRoute: AuthenticatedMonAccesRoute,
   AuthenticatedRevisionRoute: AuthenticatedRevisionRoute,
   AuthenticatedTableauDeBordRoute: AuthenticatedTableauDeBordRoute,
