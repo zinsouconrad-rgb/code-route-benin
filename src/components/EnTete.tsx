@@ -41,6 +41,12 @@ export function EnTete() {
             </span>
           )}
 
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/fiches">
+              <BookMarked className="h-4 w-4" />
+              <span className="hidden sm:inline">Fiches</span>
+            </Link>
+          </Button>
           {estAdmin && (
             <Button asChild variant="ghost" size="sm">
               <Link to="/admin">
