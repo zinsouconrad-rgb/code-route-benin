@@ -195,6 +195,11 @@ function TableauDeBord() {
             <Star className="h-4 w-4" /> Mes favoris
           </Link>
         </Button>
+        <Button asChild variant="outline" size="lg" className="justify-start sm:col-span-2">
+          <Link to="/fiches">
+            <BookMarked className="h-4 w-4" /> Fiches et panneaux
+          </Link>
+        </Button>
       </div>
     </div>
   );
