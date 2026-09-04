@@ -109,6 +109,8 @@ function Stats() {
     { label: "Questions publiées", valeur: data.validees },
     { label: "En attente de validation", valeur: data.aValider },
     { label: "Signalements", valeur: data.signalements },
+    { label: "Élèves actifs (7 j)", valeur: data.actifs7 },
+    { label: "Réussite examens blancs", valeur: `${data.tauxExamens}%` },
   ];
 
   return (
